@@ -4,14 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Poll.Data.DataModel
 {
-    public class Choice
+    public class Vote
     {
         [Key]
         public int Id { get; set; }
-
-        [StringLength(50)]
-        public string Name { get; set; }
-        public Poll Poll { get; set; }
-        List<Vote> Votes { get; set; }
+        
+        public User User { get; set; }
+        public Choice Choice { get; set; }
     }
 }
