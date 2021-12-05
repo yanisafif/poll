@@ -1,6 +1,5 @@
 ﻿using System;
-
-namespace Poll.Data
+namespace Poll.Data.DataModel
 {
     public class User
     {
