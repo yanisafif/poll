@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Poll.Data.DataModel
+namespace Poll.Data.Model
 {
     public class Choice
     {
@@ -11,7 +11,7 @@ namespace Poll.Data.DataModel
 
         [StringLength(50)]
         public string Name { get; set; }
-        public Poll Poll { get; set; }
+        public Survey Survey { get; set; }
         List<Vote> Votes { get; set; }
     }
 }

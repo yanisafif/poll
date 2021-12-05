@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Poll.Data.DataModel
+namespace Poll.Data.Model
 {
     public class User
     {
@@ -19,7 +19,7 @@ namespace Poll.Data.DataModel
         [Required]
         [StringLength(50)]
         public string Pseudo { get; set; }
-        public List<Poll> Polls { get; set; }
+        public List<Survey> Surveys { get; set; }
         public List<Vote> Votes { get; set; }
     }
 }

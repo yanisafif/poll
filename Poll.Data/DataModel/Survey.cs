@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Poll.Data.DataModel
+namespace Poll.Data.Model
 {
-    public class Poll
+    public class Survey
     {
         [Key]
         public int Id { get; set; }

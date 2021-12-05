@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Poll.Data.DataModel
+namespace Poll.Data.Model
 {
     public class Vote
     {
