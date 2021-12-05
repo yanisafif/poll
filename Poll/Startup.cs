@@ -1,12 +1,12 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Poll.Data;
 
 namespace Poll
@@ -26,7 +26,7 @@ namespace Poll
             services.AddDbContext<AppDbContext>(dbCtxOption => {
                 dbCtxOption.UseMySql(
                     Configuration.GetConnectionString("MariaDbConnectionString"),  
-                    new MySqlServerVersion(new Version(Configuration.Get("MysqlVersion")))
+                    new MySqlServerVersion(new Version(Configuration["MysqlVersion"]))
                 ).LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
