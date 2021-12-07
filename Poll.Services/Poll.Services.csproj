@@ -8,4 +8,8 @@
     <Folder Include="Users\ModelView\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Poll.Data\Poll.Data.csproj" />
+  </ItemGroup>
+
 </Project>

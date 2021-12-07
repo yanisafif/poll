@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Poll.Data\Poll.Data.csproj" />
+    <ProjectReference Include="..\Poll.Services\Poll.Services.csproj" />
   </ItemGroup>
 
 </Project>
