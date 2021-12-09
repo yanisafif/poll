@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Poll.Models;
+using Poll.Services.Users;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Poll.Services.Users.ModelView;
 
 namespace Poll.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUsersService _usersService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUsersService users)
         {
             _logger = logger;
+            _usersService = users;
         }
 
         public IActionResult Index()
@@ -26,13 +30,15 @@ namespace Poll.Controllers
         {
             return View();
         }
-
-        public IActionResult Login()
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            return View();
+            await _usersService.RegisterAsync(model);
+
+            return Redirect("index");
         }
 
-        public IActionResult Privacy()
+        public IActionResult Login()
         {
             return View();
         }

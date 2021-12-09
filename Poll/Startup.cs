@@ -8,6 +8,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Poll.Data;
+using Poll.Services;
+using Poll.Services.Users;
+using Poll.Data.Users;
 
 namespace Poll
 {
@@ -23,14 +26,17 @@ namespace Poll
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(dbCtxOption => {
+            /*services.AddDbContext<AppDbContext>(dbCtxOption => {
                 dbCtxOption.UseMySql(
                     Configuration.GetConnectionString("MariaDbConnectionString"),  
                     new MySqlServerVersion(new Version(Configuration["MysqlVersion"]))
                 ).LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
-            });
+            });*/
+
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<IUsersService, UsersService>();
 
             services.AddControllersWithViews();
         }

@@ -18,14 +18,9 @@ namespace Poll.Data.Users
         public bool AnyEmailOrPseudo(string email, string pseudo)
         {
 
-            if(_context.Users.Any(x => x.Email == email))
-            {
-                if (_context.Users.Any(x => x.Pseudo == pseudo))
-                {
-                    return false;
-                }
-            }
-            
+            if(_context.Users.Any(x => x.Email == email) || _context.Users.Any(x => x.Pseudo == pseudo))
+                return false;
+
             return true;
         }
 
