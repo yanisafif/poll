@@ -29,7 +29,7 @@ namespace Poll.Services
                 {
                     PollName = a.Name, 
                     UserName = a.User.Pseudo, 
-                    CreationDate = a.CreationDate, 
+                    CreationDate = a.CreationDate.ToShortDateString(), 
                     IsActive =  a.IsActive
                 }
             );

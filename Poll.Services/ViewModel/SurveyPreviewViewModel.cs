@@ -11,7 +11,7 @@ namespace Poll.Services.ViewModel
     {
         public string PollName { get; set; }
         public string UserName { get; set; }
-        public DateTime CreationDate { get; set; }
+        public string CreationDate { get; set; }
         public bool IsActive { get; set; }
         
     }
