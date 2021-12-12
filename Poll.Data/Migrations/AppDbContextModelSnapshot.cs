@@ -43,6 +43,9 @@ namespace Poll.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
@@ -97,6 +100,9 @@ namespace Poll.Data.Migrations
                     b.Property<int?>("ChoiceId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
@@ -120,9 +126,11 @@ namespace Poll.Data.Migrations
 
             modelBuilder.Entity("Poll.Data.Model.Survey", b =>
                 {
-                    b.HasOne("Poll.Data.Model.User", null)
+                    b.HasOne("Poll.Data.Model.User", "User")
                         .WithMany("Surveys")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Poll.Data.Model.Vote", b =>

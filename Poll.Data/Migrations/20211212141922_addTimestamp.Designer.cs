@@ -9,8 +9,8 @@ using Poll.Data;
 namespace Poll.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211205135300_initial")]
-    partial class initial
+    [Migration("20211212141922_addTimestamp")]
+    partial class addTimestamp
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,6 +44,9 @@ namespace Poll.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
@@ -99,6 +102,9 @@ namespace Poll.Data.Migrations
                     b.Property<int?>("ChoiceId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
@@ -122,9 +128,11 @@ namespace Poll.Data.Migrations
 
             modelBuilder.Entity("Poll.Data.Model.Survey", b =>
                 {
-                    b.HasOne("Poll.Data.Model.User", null)
+                    b.HasOne("Poll.Data.Model.User", "User")
                         .WithMany("Surveys")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Poll.Data.Model.Vote", b =>
