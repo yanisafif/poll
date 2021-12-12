@@ -49,6 +49,9 @@ namespace Poll.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("MultipleChoices")
                         .HasColumnType("tinyint(1)");
 

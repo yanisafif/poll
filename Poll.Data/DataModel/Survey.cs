@@ -16,5 +16,6 @@ namespace Poll.Data.Model
         public List<Choice> Choices { get; set; }
         public User User { get; set; }
         public DateTime CreationDate { get; set; }
+        public bool IsActive { get; set; }
     }
 }
