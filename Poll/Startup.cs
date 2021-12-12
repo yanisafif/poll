@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Poll.Data;
 using Poll.Data.Repositories;
+using Poll.Services;
 namespace Poll
 {
     public class Startup
@@ -31,7 +32,9 @@ namespace Poll
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
             });
+
             services.AddScoped<ISurveyRepository, SurveyRepository>();
+            services.AddScoped<ISurveyService, SurveyService>();
 
             services.AddControllersWithViews();
         }
