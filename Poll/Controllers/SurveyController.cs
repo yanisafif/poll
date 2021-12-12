@@ -21,9 +21,12 @@ namespace Poll.Controllers
             _surveyService = surveyService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            IEnumerable<SurveyPreviewViewModel> models = await this._surveyService.GetListPreviewAsync();
+
+            return View(models);
         }
     }
 }

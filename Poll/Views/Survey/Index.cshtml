@@ -1,0 +1,18 @@
+﻿@using Poll.Services.ViewModel;
+@model IEnumerable<SurveyPreviewViewModel>;
+
+@{
+    ViewData["Title"] = "Liste de sondages";
+}
+
+@foreach(SurveyPreviewViewModel survey in Model)
+{
+<div class="inline-block">
+    <h2>@survey.PollName</h2>
+    <span>@survey.UserName</span>
+    <span>@survey.CreationDate</span>
+</div>
+}
+
+<h1>View</h1>
+

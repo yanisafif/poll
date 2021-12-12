@@ -8,6 +8,6 @@ namespace Poll.Services
 {
     public interface ISurveyService
     {
-        Task<IEnumerable<SurveyPreviewViewModel>> GetListPreview();
+        Task<IEnumerable<SurveyPreviewViewModel>> GetListPreviewAsync();
     }
 }

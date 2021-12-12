@@ -17,7 +17,7 @@ namespace Poll.Services
             this._surveyRepo = surveyRepo;
         }
 
-        public async Task<IEnumerable<SurveyPreviewViewModel>> GetListPreview()
+        public async Task<IEnumerable<SurveyPreviewViewModel>> GetListPreviewAsync()
         {
             List<Survey> surveys = await this._surveyRepo.GetListAsync();
 
