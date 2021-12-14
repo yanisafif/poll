@@ -11,5 +11,9 @@ namespace Poll.Services.Users
     {
         public Task RegisterAsync(RegisterViewModel model);
 
+        public Task<bool> Authenticated(LoginViewModel model);
+        public Task Logout();
+
+
     }
 }
