@@ -30,5 +30,14 @@ namespace Poll.Data.Repositories
             .Include(a => a.Choices)
             .ToListAsync();
         }
+
+        public async Task AddSurveyAsync(Survey survey)
+        {
+            if (survey is null)
+                throw new ArgumentNullException(nameof(survey));
+
+            await this._dbContext.Surveys.AddAsync(survey);
+            await this._dbContext.SaveChangesAsync();
+        }
     }
 }

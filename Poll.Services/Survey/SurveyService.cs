@@ -36,5 +36,31 @@ namespace Poll.Services
 
             return models ?? new List<SurveyPreviewViewModel>();
         }
+
+        public async Task AddSurveyAsync(AddSurveyViewModel surveyModel)
+        {
+            if (surveyModel is null)
+                throw new ArgumentNullException(nameof(surveyModel));
+
+            if (String.IsNullOrWhiteSpace(surveyModel.Name) || surveyModel.Choises.Count < 2)
+                throw new ArgumentException(nameof(surveyModel));
+
+            IEnumerable<Choice> choises = surveyModel.Choises.Select((c) => new Choice()
+            {
+                Name = c
+            });
+
+            Survey survey = new Survey()
+            {
+                CreationDate = DateTime.Now,
+                Description = surveyModel.Description,
+                Choices = choises.ToList(),
+                Name = surveyModel.Name,
+                IsActive = true,
+                MultipleChoices = surveyModel.IsMultipleChoises
+            };
+
+            await this._surveyRepo.AddSurveyAsync(survey);
+        }
     }
 }
