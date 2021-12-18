@@ -15,5 +15,7 @@ namespace Poll.Data.Repositories
 
         Task AddSurveyAsync(Survey survey);
 
+        Task<User> GetUserTest();
+
     }
 }

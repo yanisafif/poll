@@ -28,5 +28,22 @@ namespace Poll.Controllers
 
             return View(models);
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(AddSurveyViewModel model)
+        {
+            if(!ModelState.IsValid)
+                return View(model);
+            
+           await this._surveyService.AddSurveyAsync(model);
+
+            return Redirect("/Survey");
+        }
     }
 }

@@ -42,10 +42,10 @@ namespace Poll.Services
             if (surveyModel is null)
                 throw new ArgumentNullException(nameof(surveyModel));
 
-            if (String.IsNullOrWhiteSpace(surveyModel.Name) || surveyModel.Choises.Count < 2)
+            if (String.IsNullOrWhiteSpace(surveyModel.Name) || surveyModel.Choices.Count < 2)
                 throw new ArgumentException(nameof(surveyModel));
 
-            IEnumerable<Choice> choises = surveyModel.Choises.Select((c) => new Choice()
+            IEnumerable<Choice> choices = surveyModel.Choices.Select((c) => new Choice()
             {
                 Name = c
             });
@@ -54,10 +54,14 @@ namespace Poll.Services
             {
                 CreationDate = DateTime.Now,
                 Description = surveyModel.Description,
-                Choices = choises.ToList(),
+                Choices = choices.ToList(),
                 Name = surveyModel.Name,
                 IsActive = true,
-                MultipleChoices = surveyModel.IsMultipleChoises
+                MultipleChoices = surveyModel.IsMultipleChoices, 
+                ///To Test 
+                User = await this._surveyRepo.GetUserTest()
+                //End To Test
+
             };
 
             await this._surveyRepo.AddSurveyAsync(survey);
