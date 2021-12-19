@@ -36,8 +36,8 @@ namespace Poll
             });
 
             services.AddHttpContextAccessor();
-            services.AddAuthentication("Cookie")
-                .AddCookie("Cookie", config =>
+            services.AddAuthentication("Cookies")
+                .AddCookie("Cookies", config =>
                 {
                     config.LoginPath = "/home/login";
                     config.LogoutPath = "/home/logout";

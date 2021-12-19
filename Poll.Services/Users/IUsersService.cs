@@ -9,10 +9,10 @@ namespace Poll.Services.Users
 {
     public interface IUsersService
     {
-        public Task RegisterAsync(RegisterViewModel model);
+        Task RegisterAsync(RegisterViewModel model);
 
-        public Task<bool> Authenticated(LoginViewModel model);
-        public Task Logout();
+        Task<bool> Authenticated(LoginViewModel model);
+        Task Logout();
 
 
     }

@@ -6,7 +6,6 @@ using Poll.Data.Model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-
 namespace Poll.Services.Users
 {
     public class UsersService : IUsersService
@@ -56,12 +55,19 @@ namespace Poll.Services.Users
                         new Claim("Pseudo", user.Pseudo),
                         new Claim("Email", user.Email),
                     };
-                    var identity = new ClaimsIdentity(claims);
+                    var identity = new ClaimsIdentity(claims, "Cookies");
                     var pricipal = new ClaimsPrincipal(identity);
-                    await _httpContext.Authentication.SignInAsync(
+
+                    var properties = new AuthenticationProperties()
+                    {
+                        IsPersistent = true
+                    };
+
+                    await _httpContext.SignInAsync(
                         "Cookies",
-                        pricipal
-                        );
+                        pricipal, 
+                        properties
+                    );
                     return true;
                 }
             }
