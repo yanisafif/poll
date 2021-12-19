@@ -11,5 +11,7 @@ namespace Poll.Data.Users
     {
         bool AnyEmailOrPseudo(string email, string pseudo);
         Task AddUserAsync(User user);
+        User GetUserByEmail(string email);
+        bool AuthenticatedAsync(string email, string password);
     }
 }

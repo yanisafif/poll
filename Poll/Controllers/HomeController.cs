@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Poll.Models;
 using Poll.Services.Users;
 using System;
@@ -13,12 +12,11 @@ namespace Poll.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
         private readonly IUsersService _usersService;
 
-        public HomeController(ILogger<HomeController> logger, IUsersService users)
+        public HomeController( IUsersService users)
         {
-            _logger = logger;
             _usersService = users;
         }
 
@@ -37,10 +35,23 @@ namespace Poll.Controllers
 
             return Redirect("index");
         }
-
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            var result = await _usersService.Authenticated(model);
+            if (result)
+            {
+                return Redirect("index");
+            }
+
+            return View();
+            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -33,5 +33,22 @@ namespace Poll.Data.Users
             await _context.SaveChangesAsync();
 
         }
+
+        public User GetUserByEmail(string email)
+        {
+            return _context.Users.FirstOrDefault(x => x.Email == email);
+        }
+        public bool AuthenticatedAsync(string email, string password)
+        {
+            var checkLogin = GetUserByEmail(email);
+            if(checkLogin.Email == email && checkLogin.Password == password)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
