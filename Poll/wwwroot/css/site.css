@@ -73,3 +73,8 @@ body {
 .pointer {
   cursor: pointer;
 }
+
+.link {
+  text-decoration: underline !important;
+  color: blue !important;
+}

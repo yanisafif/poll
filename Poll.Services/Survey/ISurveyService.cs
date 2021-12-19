@@ -9,5 +9,7 @@ namespace Poll.Services
     public interface ISurveyService
     {
         Task<IEnumerable<SurveyPreviewViewModel>> GetListPreviewAsync();
+        Task AddSurveyAsync(AddSurveyViewModel surveyModel);
+
     }
 }
