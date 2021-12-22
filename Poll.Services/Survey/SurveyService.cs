@@ -81,5 +81,35 @@ namespace Poll.Services
 
             await this._surveyRepo.AddSurveyAsync(survey);
         }
+
+        public async Task<VoteViewModel> GetChoicesAsync(string guid)
+        {
+            if(String.IsNullOrWhiteSpace(guid))
+                throw new ArgumentNullException(nameof(guid));
+
+            Survey survey = await this._surveyRepo.GetAsync(guid);
+
+            if(survey is null)
+                throw new ArgumentException();
+            
+            IEnumerable<ChoiceViewModel> choices = survey.Choices.Select(m => new ChoiceViewModel() 
+            {
+                Id = m.Id,
+                Name = m.Name
+            });
+
+            return new VoteViewModel() 
+            {
+                Choices = choices, 
+                Guid = guid,
+                PollName = survey.Name
+            };
+        }
+
+        public async Task AddVote(string guid, VoteViewModel a)
+        {
+            this._logger.LogInformation("Id :" + a.Choice);
+            this._logger.LogInformation("guid :" + guid);
+        }
     }
 }

@@ -47,8 +47,18 @@ namespace Poll.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Vote()
+        [Route("Vote/{guid}")]
+        public async Task<IActionResult> Vote([FromRoute] string guid)
         {
+            VoteViewModel model = await this._surveyService.GetChoicesAsync(guid);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
+        {
+            await this._surveyService.AddVote(guid, a);
+
             return View();
         }
     }

@@ -13,6 +13,8 @@ namespace Poll.Data.Repositories
 
         Task<Survey> GetAsync(int id);
 
+        Task<Survey> GetAsync(string guid);
+
         Task AddSurveyAsync(Survey survey);
 
         Task<User> GetUserTest();

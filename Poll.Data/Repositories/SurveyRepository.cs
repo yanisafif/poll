@@ -20,7 +20,15 @@ namespace Poll.Data.Repositories
             return this._dbContext.Surveys
             .Include(a => a.User)
             .Include(a => a.Choices)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public Task<Survey> GetAsync(string guid)
+        {
+            return this._dbContext.Surveys
+            .Include(a => a.User)
+            .Include(a => a.Choices)
+            .FirstOrDefaultAsync(m => m.Guid == guid);
         }
 
         public Task<List<Survey>> GetListAsync()
@@ -50,4 +58,5 @@ namespace Poll.Data.Repositories
             return this._dbContext.Surveys.AnyAsync(s => s.Guid == guid);
         }
     }
+
 }
