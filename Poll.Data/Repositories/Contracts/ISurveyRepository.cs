@@ -17,5 +17,6 @@ namespace Poll.Data.Repositories
 
         Task<User> GetUserTest();
 
+        Task<bool> IsGuidUsed(string guid);
     }
 }
