@@ -47,15 +47,25 @@ namespace Poll.Data.Repositories
             await this._dbContext.Surveys.AddAsync(survey);
             await this._dbContext.SaveChangesAsync();
         }
-
-        public Task<User> GetUserTest()
+        public async Task AddVoteAsync(Vote vote)
         {
-            return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 1);
+            if(vote is null)
+                throw new ArgumentNullException(nameof(vote)); 
+            
+            await this._dbContext.Votes.AddAsync(vote);
+            await this._dbContext.SaveChangesAsync();
         }
 
         public Task<bool> IsGuidUsed(string guid)
         {
             return this._dbContext.Surveys.AnyAsync(s => s.Guid == guid);
+        }
+
+
+
+        public Task<User> GetUserTest()
+        {
+            return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 1);
         }
     }
 
