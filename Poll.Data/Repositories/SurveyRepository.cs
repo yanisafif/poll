@@ -60,7 +60,15 @@ namespace Poll.Data.Repositories
         {
             return this._dbContext.Surveys.AnyAsync(s => s.Guid == guid);
         }
+        
+        public async Task Update(Survey survey)
+        {
+            if(survey is null)
+                throw new ArgumentNullException(nameof(survey)); 
 
+            this._dbContext.Surveys.Update(survey);
+            await this._dbContext.SaveChangesAsync();
+        }
 
 
         public Task<User> GetUserTest()
