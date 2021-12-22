@@ -42,7 +42,12 @@ namespace Poll.Data.Repositories
 
         public Task<User> GetUserTest()
         {
-            return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 2);
+            return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 1);
+        }
+
+        public Task<bool> IsGuidUsed(string guid)
+        {
+            return this._dbContext.Surveys.AnyAsync(s => s.Guid == guid);
         }
     }
 }

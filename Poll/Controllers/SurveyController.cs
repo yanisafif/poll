@@ -24,7 +24,7 @@ namespace Poll.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<SurveyPreviewViewModel> models = await this._surveyService.GetListPreviewAsync();
+            IEnumerable<SurveyViewModel> models = await this._surveyService.GetList();
 
             return View(models);
         }
@@ -44,6 +44,12 @@ namespace Poll.Controllers
            await this._surveyService.AddSurveyAsync(model);
 
             return Redirect("/Survey");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Vote()
+        {
+            return View();
         }
     }
 }
