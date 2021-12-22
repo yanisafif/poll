@@ -131,5 +131,22 @@
 
                 await this._surveyRepo.AddVoteAsync(vote);
             } 
+
+            public async Task DeactivateAsync(string guid)
+            {
+                if(String.IsNullOrWhiteSpace(guid))
+                    throw new ArgumentNullException(nameof(guid));
+
+                Survey survey = await this._surveyRepo.GetAsync(guid); 
+
+                if(survey is null)
+                    throw new ArgumentException(nameof(guid));
+                
+                // TO DO: Check if current user owns the survey
+
+                survey.IsActive = false; 
+
+                await this._surveyRepo.Update(survey);
+            }
         }
     }

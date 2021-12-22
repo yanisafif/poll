@@ -60,5 +60,12 @@ namespace Poll.Controllers
 
             return Redirect("/Survey");
         }
+
+        public async Task<IActionResult> Deactivate([FromRoute] string guid)
+        {
+            await this._surveyService.DeactivateAsync(guid);
+
+            return Redirect("/Survey");
+        }
     }
 }

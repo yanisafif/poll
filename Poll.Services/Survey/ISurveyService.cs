@@ -15,5 +15,7 @@ namespace Poll.Services
         Task<VoteViewModel> GetChoicesAsync(string guid);
 
         Task AddVote(string guid, VoteViewModel a);
+
+        Task DeactivateAsync(string guid);
     }
 }

@@ -35,9 +35,15 @@
                 }
                 <span class="col">@survey.CreationDate</span>
                 <span class="col">
-                    <div class="pointer py-1"> <a class="link" href="/Survey/Vote/@survey.Guid">Voter</a> </div>
-                    <div class="pointer py-1"> <a class="link" href="/Survey/Close/@survey.Guid">Désactiver</a> </div>
-                    <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.Guid">Voire les résultats</a> </div>
+                    @if(survey.IsActive)
+                    {
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Vote/@survey.Guid">Voter</a> </div>
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.Guid">Désactiver</a> </div>
+                    }
+                    else 
+                    {
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.Guid">Voire les résultats</a> </div>
+                    }
                 </span>
             </div>
 
