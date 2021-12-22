@@ -1,0 +1,33 @@
+@using Poll.Services.ViewModel;
+@model VoteViewModel
+@{
+    ViewData["Title"] = "Voter";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<h4>@Model.PollName</h4>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Vote" asp method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div id="choice-container">
+            @foreach (ChoiceViewModel item in Model.Choices)
+            {
+                <div class="form-group">
+                    <input type="radio" asp-for="Choice" value="@item.Id" id="Choice" name="Choice"/>
+                    <label class="control-label"> @item.Name </label>
+                    <span asp-validation-for="Choice" class="text-danger"></span>
+                </div>                
+            }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@* @section Scripts {
+     <script type="text/javascript" src="/js/Survey/Create.js"></script>
+} *@
