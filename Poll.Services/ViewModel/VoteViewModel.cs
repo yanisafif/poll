@@ -14,13 +14,13 @@ namespace Poll.Services.ViewModel
         public List<ChoiceViewModel> Choices { get; set; }
         public string Guid { get; set; }
 
-        public int? Choice { get; set; } // Selected choice id when IsMultipleChoice is false 
     }
 
     public class ChoiceViewModel
     {
         public string Name { get; set; }
         public int Id { get; set; }
-        public bool Selected { get; set;}
+        public bool Selected { get; set; }
+        public bool SelectedBefore { get; set; }
     }   
 }

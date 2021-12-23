@@ -12,6 +12,6 @@ namespace Poll.Data.Model
         [StringLength(50)]
         public string Name { get; set; }
         public Survey Survey { get; set; }
-        List<Vote> Votes { get; set; }
+        public List<Vote> Votes { get; set; }
     }
 }
