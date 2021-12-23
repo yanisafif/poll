@@ -33,8 +33,11 @@ namespace Poll
                 .EnableDetailedErrors();
             });
 
-            services.AddScoped<ISurveyRepository, SurveyRepository>();
             services.AddScoped<ISurveyService, SurveyService>();
+            services.AddScoped<IVoteService, VoteService>();
+    
+            services.AddScoped<IVoteRepository, VoteRepository>();
+            services.AddScoped<ISurveyRepository, SurveyRepository>();
 
             services.AddControllersWithViews();
         }

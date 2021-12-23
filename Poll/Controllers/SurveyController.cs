@@ -14,11 +14,13 @@ namespace Poll.Controllers
     {
         private readonly ILogger<SurveyController> _logger;
         private readonly ISurveyService _surveyService;
+        private readonly IVoteService _voteService;
 
-        public SurveyController(ILogger<SurveyController> logger, ISurveyService surveyService)
+        public SurveyController(ILogger<SurveyController> logger, ISurveyService surveyService, IVoteService voteService)
         {
             _logger = logger;
             _surveyService = surveyService;
+            _voteService = voteService;
         }
 
         [HttpGet]
@@ -56,7 +58,7 @@ namespace Poll.Controllers
         [HttpPost]
         public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
         {
-            await this._surveyService.AddVote(guid, a);
+            await this._voteService.AddVote(guid, a);
 
             return Redirect("/Survey");
         }

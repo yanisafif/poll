@@ -47,14 +47,6 @@ namespace Poll.Data.Repositories
             await this._dbContext.Surveys.AddAsync(survey);
             await this._dbContext.SaveChangesAsync();
         }
-        public async Task AddVoteAsync(Vote vote)
-        {
-            if(vote is null)
-                throw new ArgumentNullException(nameof(vote)); 
-            
-            await this._dbContext.Votes.AddAsync(vote);
-            await this._dbContext.SaveChangesAsync();
-        }
 
         public Task<bool> IsGuidUsed(string guid)
         {

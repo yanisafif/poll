@@ -11,11 +11,17 @@
         public class SurveyService : ISurveyService
         {
             private readonly ISurveyRepository _surveyRepo;
+            private readonly IVoteRepository _voteRepo;
             private readonly ILogger<ISurveyService> _logger;
 
-            public SurveyService(ISurveyRepository surveyRepo, ILogger<ISurveyService> logger)
+            public SurveyService(
+                ISurveyRepository surveyRepo, 
+                IVoteRepository voteRepo,
+                ILogger<ISurveyService> logger
+            )
             {
                 this._surveyRepo = surveyRepo;
+                this._voteRepo = voteRepo;
                 this._logger = logger;
             }
 
@@ -100,37 +106,12 @@
 
                 return new VoteViewModel() 
                 {
-                    Choices = choices, 
+                    Choices = choices.ToList(), 
                     Guid = guid,
-                    PollName = survey.Name
+                    PollName = survey.Name, 
+                    IsMultipleChoice =  survey.MultipleChoices
                 };
             }
-
-            public async Task AddVote(string guid, VoteViewModel a)
-            {
-                if(String.IsNullOrWhiteSpace(guid))
-                    throw new ArgumentNullException(nameof(guid));
-                if(a.Choice <= 0)
-                    throw new ArgumentNullException(nameof(a.Choice));
-
-                Survey survey = await this._surveyRepo.GetAsync(guid);
-
-                if(!survey.IsActive) 
-                    throw new Exception("Le sondage n'est plus actif.");
-
-                Choice choice = survey.Choices.FirstOrDefault(f => f.Id == a.Choice);
-                if(choice is null) 
-                    throw new Exception("Ce sondage ne conteint pas ce vote la");
-                
-                Vote vote = new Vote()
-                {
-                    CreationDate = DateTime.Now, 
-                    Choice = choice, 
-                    User = await this._surveyRepo.GetUserTest()
-                };
-
-                await this._surveyRepo.AddVoteAsync(vote);
-            } 
 
             public async Task DeactivateAsync(string guid)
             {
