@@ -10,10 +10,11 @@ namespace Poll.Services.ViewModel
     public class VoteViewModel
     {
         public string PollName { get; set; }
+        public int NumberOfVoter { get; set; }
+        public string Description { get; set; }
         public bool IsMultipleChoice { get; set; }
         public List<ChoiceViewModel> Choices { get; set; }
         public string Guid { get; set; }
-
     }
 
     public class ChoiceViewModel

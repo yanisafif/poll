@@ -25,6 +25,45 @@
                 this._logger = logger;
             }
 
+            public async Task<VoteViewModel> GetVoteViewModelAsync(string guid)
+            {
+                if(String.IsNullOrWhiteSpace(guid))
+                    throw new ArgumentNullException(nameof(guid));
+
+                Survey survey = await this._surveyRepo.GetAsync(guid);
+
+                if(survey is null)
+                    throw new ArgumentException();
+
+                if(!survey.IsActive)
+                    throw new SurveyDeactivatedException();
+
+                User user = await this._surveyRepo.GetUserTest();
+                
+                IEnumerable<ChoiceViewModel> choices = survey.Choices.Select(m => 
+                {
+                    bool isSelected = this._voteRepo.DidUserVote(user.Id, m.Id);
+                    return new ChoiceViewModel() 
+                    {
+                        Id = m.Id,
+                        Name = m.Name, 
+                        Selected = isSelected, 
+                        SelectedBefore = isSelected
+                    };
+                });
+
+                return new VoteViewModel() 
+                {
+                    Choices = choices.ToList(), 
+                    Guid = guid,
+                    PollName = survey.Name, 
+                    IsMultipleChoice =  survey.MultipleChoices, 
+                    NumberOfVoter = this._voteRepo.GetNumberVoter(survey.Id), 
+                    Description = survey.Description
+                };
+            }
+
+
             public async Task AddVote(string guid, VoteViewModel model)
             {
                 if(String.IsNullOrWhiteSpace(guid))
@@ -35,7 +74,7 @@
                 Survey survey = await this._surveyRepo.GetAsync(guid);
 
                 if(!survey.IsActive) 
-                    throw new Exception("Le sondage n'est plus actif.");
+                    throw new SurveyDeactivatedException();
 
                 User user = await this._surveyRepo.GetUserTest(); 
 
@@ -76,5 +115,15 @@
                     User = user
                 };
             }
+        }
+
+        [System.Serializable]
+        public class SurveyDeactivatedException : System.Exception
+        {
+            public SurveyDeactivatedException(string message = "Le sondage n'est plus actif.") : base(message) { }
+            public SurveyDeactivatedException(string message, System.Exception inner) : base(message, inner) { }
+            protected SurveyDeactivatedException(
+                System.Runtime.Serialization.SerializationInfo info,
+                System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
         }
     }

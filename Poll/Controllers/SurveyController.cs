@@ -51,7 +51,16 @@ namespace Poll.Controllers
         [HttpGet]
         public async Task<IActionResult> Vote([FromRoute] string guid)
         {
-            VoteViewModel model = await this._surveyService.GetChoicesAsync(guid);
+            
+            VoteViewModel model;
+            try
+            {
+                model = await this._voteService.GetVoteViewModelAsync(guid);
+            }
+            catch(SurveyDeactivatedException)
+            {
+                return Redirect($"/Survey/Result/{guid}");
+            }
             return View(model);
         }
 

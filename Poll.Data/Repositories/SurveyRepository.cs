@@ -36,6 +36,7 @@ namespace Poll.Data.Repositories
             return this._dbContext.Surveys
             .Include(a => a.User)
             .Include(a => a.Choices)
+            .OrderBy(f => f.CreationDate)
             .ToListAsync();
         }
 
@@ -65,7 +66,7 @@ namespace Poll.Data.Repositories
 
         public Task<User> GetUserTest()
         {
-            return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 1);
+            return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 2);
         }
     }
 
