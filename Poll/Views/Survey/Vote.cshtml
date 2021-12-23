@@ -8,9 +8,12 @@
 <h4>@Model.PollName</h4>
 <h5>Nombre de votant : @Model.NumberOfVoter</h5>
 <hr />
-<p>
-    @Model.Description;
-</p>
+@if(!String.IsNullOrWhiteSpace(survey.Description))
+{
+    <p class="px-5">
+        @survey.Description
+    </p>
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Vote" asp method="post">
