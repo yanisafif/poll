@@ -29,8 +29,8 @@
             {
                 if(String.IsNullOrWhiteSpace(guid))
                     throw new ArgumentNullException(nameof(guid));
-                if(model.Choice <= 0 && !model.IsMultipleChoice)
-                    throw new ArgumentNullException(nameof(model.Choice));
+                if(model.Choices is null || model.Choices.Count == 0)
+                    throw new ArgumentException(nameof(model.Choices));
 
                 Survey survey = await this._surveyRepo.GetAsync(guid);
 
@@ -39,29 +39,32 @@
 
                 User user = await this._surveyRepo.GetUserTest(); 
 
-                if(model.IsMultipleChoice)
+                List<Vote> votesAdd = new List<Vote>();
+                List<Vote> votesDelete = new List<Vote>();
+                foreach (ChoiceViewModel item in model.Choices)
                 {
-                    List<Vote> votes = new List<Vote>();
-                    foreach (ChoiceViewModel item in model.Choices)
+                    if(item.Selected && !item.SelectedBefore)
                     {
-                        if(item.Selected)
-                        {
-                            votes.Add(this.CreateVote(survey, user, item.Id));
-                        }
+                        votesAdd.Add(this.CreateVote(survey, user, item.Id));
                     }
-                    await this._voteRepo.AddVotesAsync(votes.ToArray());
+                    if(!item.Selected && item.SelectedBefore) 
+                    {
+                        votesDelete.Add(this._voteRepo.GetVote(user.Id, item.Id));
+                    }
                 }
-                else
-                {
-                    Vote vote = this.CreateVote(survey, user, model.Choice);
-                    await this._voteRepo.AddVoteAsync(vote);
-                }
-                
+
+                if(!survey.MultipleChoices && votesAdd.Count > 1)
+                    throw new Exception("Plusieurs choix ont été sélectionnés alors que le sondage ne permet pas les choix multiples");
+
+                if(votesAdd.Count > 0)
+                    await this._voteRepo.AddVotesAsync(votesAdd.ToArray());
+                if(votesDelete.Count > 0)
+                    await this._voteRepo.DeleteVotesAsync(votesDelete.ToArray());
             }
 
-            private Vote CreateVote(Survey survey, User user, int voteId)
+            private Vote CreateVote(Survey survey, User user, int choiceId)
             {
-                Choice choice = survey.Choices.FirstOrDefault(f => f.Id == voteId);
+                Choice choice = survey.Choices.FirstOrDefault(f => f.Id == choiceId);
 
                 if(choice is null) 
                     throw new Exception("Ce sondage ne conteint pas ce vote la");

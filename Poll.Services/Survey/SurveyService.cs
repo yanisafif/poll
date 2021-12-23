@@ -97,11 +97,19 @@
 
                 if(survey is null)
                     throw new ArgumentException();
+
+                User user = await this._surveyRepo.GetUserTest();
                 
-                IEnumerable<ChoiceViewModel> choices = survey.Choices.Select(m => new ChoiceViewModel() 
+                IEnumerable<ChoiceViewModel> choices = survey.Choices.Select(m => 
                 {
-                    Id = m.Id,
-                    Name = m.Name
+                    bool isSelected = this._voteRepo.DidUserVote(user.Id, m.Id);
+                    return new ChoiceViewModel() 
+                    {
+                        Id = m.Id,
+                        Name = m.Name, 
+                        Selected = isSelected, 
+                        SelectedBefore = isSelected
+                    };
                 });
 
                 return new VoteViewModel() 
