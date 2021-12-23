@@ -42,6 +42,7 @@ namespace Poll
             services.AddScoped<IUsersRepository, UsersRepository>();
 
             services.AddHttpContextAccessor();
+||||||| parent of a019015 (Add Multiple choice vote)
 
             services.AddControllersWithViews();
         }
