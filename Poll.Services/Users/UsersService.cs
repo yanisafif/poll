@@ -52,6 +52,7 @@ namespace Poll.Services.Users
                     var claims = new List<Claim>()
                     {
                         // Récupérer l'entité de l'user grace à l'email
+                        new Claim("Id", user.Id.ToString()),
                         new Claim("Pseudo", user.Pseudo),
                         new Claim("Email", user.Email),
                     };

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Poll.Services.Users.ModelView;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Poll.Controllers
 {
@@ -22,6 +23,7 @@ namespace Poll.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
         public IActionResult Register()
@@ -54,10 +56,30 @@ namespace Poll.Controllers
             
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult Privacy()
+        {
+            var claims = HttpContext.User.Claims.Select(c => $"{c.Type}: {c.Value}");
+            
+            var strClaims = string.Join(Environment.NewLine, claims);
+
+            ViewData["Claims"] = strClaims;
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await _usersService.Logout();
+            return LocalRedirect("/home/index");
         }
     }
 }
