@@ -1,7 +1,9 @@
 using System;
-using System.Threading.Tasks;
-using Poll.Data.Model;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Poll.Data.Model;
 
 namespace Poll.Data.Repositories
 {
@@ -20,6 +22,13 @@ namespace Poll.Data.Repositories
         public Vote GetVote(int userId, int choiceId)
         {
             return this._dbContext.Votes.First(f => f.User.Id == userId && f.Choice.Id == choiceId);
+        }
+        public int GetNumberVoter(int surveyId)
+        {
+            return this._dbContext.Votes.FromSqlRaw(
+                "SELECT DISTINCT UserId FROM Votes WHERE ChoiceId IN (SELECT Choices.Id FROM Surveys INNER JOIN Choices ON Choices.SurveyId = Surveys.Id WHERE Surveys.Id = {0})",
+                surveyId
+            ).Count();
         }
         public async Task AddVoteAsync(Vote vote)
         {

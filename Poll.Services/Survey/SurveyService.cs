@@ -88,39 +88,6 @@
                 await this._surveyRepo.AddSurveyAsync(survey);
             }
 
-            public async Task<VoteViewModel> GetChoicesAsync(string guid)
-            {
-                if(String.IsNullOrWhiteSpace(guid))
-                    throw new ArgumentNullException(nameof(guid));
-
-                Survey survey = await this._surveyRepo.GetAsync(guid);
-
-                if(survey is null)
-                    throw new ArgumentException();
-
-                User user = await this._surveyRepo.GetUserTest();
-                
-                IEnumerable<ChoiceViewModel> choices = survey.Choices.Select(m => 
-                {
-                    bool isSelected = this._voteRepo.DidUserVote(user.Id, m.Id);
-                    return new ChoiceViewModel() 
-                    {
-                        Id = m.Id,
-                        Name = m.Name, 
-                        Selected = isSelected, 
-                        SelectedBefore = isSelected
-                    };
-                });
-
-                return new VoteViewModel() 
-                {
-                    Choices = choices.ToList(), 
-                    Guid = guid,
-                    PollName = survey.Name, 
-                    IsMultipleChoice =  survey.MultipleChoices
-                };
-            }
-
             public async Task DeactivateAsync(string guid)
             {
                 if(String.IsNullOrWhiteSpace(guid))

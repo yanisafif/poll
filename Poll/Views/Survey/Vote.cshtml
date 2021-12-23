@@ -5,8 +5,12 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-<hr />
 <h4>@Model.PollName</h4>
+<h5>Nombre de votant : @Model.NumberOfVoter</h5>
+<hr />
+<p>
+    @Model.Description;
+</p>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Vote" asp method="post">
