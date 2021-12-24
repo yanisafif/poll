@@ -6,6 +6,9 @@ using Poll.Data.Model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Linq;
+
 namespace Poll.Services.Users
 {
     public class UsersService : IUsersService
@@ -51,9 +54,6 @@ namespace Poll.Services.Users
                     // Sortir l'entité User grace à une function dans le User
                     var claims = new List<Claim>()
                     {
-                        // Récupérer l'entité de l'user grace à l'email
-                        new Claim("Id", user.Id.ToString()),
-                        new Claim("Pseudo", user.Pseudo),
                         new Claim("Email", user.Email),
                     };
                     var identity = new ClaimsIdentity(claims, "Cookies");
@@ -71,9 +71,19 @@ namespace Poll.Services.Users
                     );
                     return true;
                 }
+                
             }
                 return false;
             
+        }
+
+        public User GetUserWithClaims()
+        {
+            var claims = _httpContext.User.Claims.Select(c => c.Value);
+            var claimsEmail = string.Join(Environment.NewLine, claims);
+            User user = _userRepo.GetUserByEmail(claimsEmail);
+
+            return user;
         }
         public async Task Logout()
         {

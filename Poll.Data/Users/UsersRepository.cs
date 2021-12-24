@@ -41,14 +41,14 @@ namespace Poll.Data.Users
         public bool AuthenticatedAsync(string email, string password)
         {
             var checkLogin = GetUserByEmail(email);
-            if(checkLogin.Email == email && checkLogin.Password == password)
+            if (checkLogin != null)
             {
-                return true;
+                if (checkLogin.Email == email && checkLogin.Password == password)
+                {
+                    return true;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

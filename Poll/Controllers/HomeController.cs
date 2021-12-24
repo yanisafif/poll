@@ -46,25 +46,24 @@ namespace Poll.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var result = await _usersService.Authenticated(model);
-            if (result)
+            
+            if (await _usersService.Authenticated(model))
             {
                 return Redirect("index");
+            }else
+            {
+                ModelState.AddModelError("model", "L'email ou le mot de passe ne correspondent pas");
+                return View();
             }
 
-            return View();
-            
         }
 
         [HttpGet]
         [Authorize]
         public IActionResult Privacy()
         {
-            var claims = HttpContext.User.Claims.Select(c => $"{c.Type}: {c.Value}");
-            
-            var strClaims = string.Join(Environment.NewLine, claims);
-
-            ViewData["Claims"] = strClaims;
+            var userConnected = _usersService.GetUserWithClaims();
+            ViewData["Claims"] = userConnected.Email;
             return View();
         }
 

@@ -1,4 +1,5 @@
-﻿using Poll.Services.Users.ModelView;
+﻿using Poll.Data.Model;
+using Poll.Services.Users.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Poll.Services.Users
         Task RegisterAsync(RegisterViewModel model);
 
         Task<bool> Authenticated(LoginViewModel model);
+        User GetUserWithClaims();
         Task Logout();
 
 
