@@ -11,5 +11,6 @@ namespace Poll.Data.Model
         
         public User User { get; set; }
         public Choice Choice { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

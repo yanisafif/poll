@@ -1,0 +1,40 @@
+﻿@using Poll.Services.ViewModel;
+@model IEnumerable<SurveyPreviewViewModel>;
+
+@{
+    ViewData["Title"] = "Liste des sondages";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+<button onclick="window.location.href = '/Survey/Create'">Créer un sondage</button>
+</div>
+
+<div class="container mt-5">
+    <div class="row my-2 font-weight-bold text-center">
+        <span class="col">Nom</span>
+        <span class="col">Créateur</span>
+        <span class="col">Statut</span>
+        <span class="col">Date de création</span>
+    </div>
+    @foreach(SurveyPreviewViewModel survey in Model)
+    {
+        <div class="card my-2">
+            <div class="row py-2 pointer text-center">
+                <h2 class="col">@survey.PollName</h2>
+                <span class="col">@survey.UserName</span>
+                @if(survey.IsActive)
+                {
+                    <span class="col">Ouvert</span>
+                }
+                else 
+                {
+                    <span class="col">Fermé</span>
+                }
+                <span class="col">@survey.CreationDate</span>
+            </div>
+        </div>
+    }
+</div>
+
