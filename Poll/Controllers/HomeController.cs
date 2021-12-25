@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Poll.Models;
-using Poll.Services.Users;
+using Poll.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Poll.Services.Users.ModelView;
+using Poll.Services.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Poll.Controllers
@@ -16,7 +16,7 @@ namespace Poll.Controllers
         
         private readonly IUsersService _usersService;
 
-        public HomeController( IUsersService users)
+        public HomeController(IUsersService users)
         {
             _usersService = users;
         }

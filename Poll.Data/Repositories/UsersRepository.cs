@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poll.Data.Users
+namespace Poll.Data.Repositories
 {
     public class UsersRepository : IUsersRepository
     {

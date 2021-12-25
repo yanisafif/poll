@@ -8,8 +8,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Poll.Data;
-using Poll.Data.Repositories;
 using Poll.Services;
+using Poll.Data.Repositories;
+using Microsoft.AspNetCore.Http;
+
 namespace Poll
 {
     public class Startup
@@ -33,8 +35,13 @@ namespace Poll
                 .EnableDetailedErrors();
             });
 
-            services.AddScoped<ISurveyRepository, SurveyRepository>();
             services.AddScoped<ISurveyService, SurveyService>();
+            services.AddScoped<IUsersService, UsersService>();
+
+            services.AddScoped<ISurveyRepository, SurveyRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+
+            services.AddHttpContextAccessor();
 
             services.AddControllersWithViews();
         }

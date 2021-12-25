@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Poll.Services.Users.ModelView
+namespace Poll.Services.ViewModel
 {
     public class RegisterViewModel
     {

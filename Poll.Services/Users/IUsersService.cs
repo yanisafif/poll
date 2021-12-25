@@ -1,12 +1,8 @@
 ﻿using Poll.Data.Model;
-using Poll.Services.Users.ModelView;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Poll.Services.ViewModel;
 using System.Threading.Tasks;
 
-namespace Poll.Services.Users
+namespace Poll.Services
 {
     public interface IUsersService
     {
@@ -15,7 +11,5 @@ namespace Poll.Services.Users
         Task<bool> Authenticated(LoginViewModel model);
         User GetUserWithClaims();
         Task Logout();
-
-
     }
 }

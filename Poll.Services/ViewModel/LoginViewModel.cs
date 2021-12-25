@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poll.Services.Users.ModelView
+namespace Poll.Services.ViewModel
 {
     public class LoginViewModel
     {

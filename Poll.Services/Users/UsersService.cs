@@ -1,15 +1,15 @@
-﻿using Poll.Data.Users;
-using Poll.Services.Users.ModelView;
+﻿using Poll.Data.Model;
+using Poll.Data.Repositories;
+using Poll.Services.ViewModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Poll.Data.Model;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 
-namespace Poll.Services.Users
+namespace Poll.Services
 {
     public class UsersService : IUsersService
     {
