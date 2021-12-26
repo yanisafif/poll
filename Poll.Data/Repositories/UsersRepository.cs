@@ -38,17 +38,5 @@ namespace Poll.Data.Repositories
         {
             return _context.Users.FirstOrDefault(x => x.Email == email);
         }
-        public bool AuthenticatedAsync(string email, string password)
-        {
-            var checkLogin = GetUserByEmail(email);
-            if (checkLogin != null)
-            {
-                if (checkLogin.Email == email && checkLogin.Password == password)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

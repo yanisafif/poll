@@ -29,12 +29,14 @@ namespace Poll.Services
                 // On vérifie si j'ai un Email ou un Pseudo similaire en bdd
                 if(_userRepo.AnyEmailOrPseudo(model.Email , model.Pseudo))
                 {
+                    var password = model.Password;
+                    var passwordSHA256 = EasyEncryption.SHA.ComputeSHA256Hash(password);
                     // On rajoute dans l'entité User les informations issus du model
                     var users = new User()
                     {
                         Pseudo = model.Pseudo,
                         Email = model.Email,    
-                        Password = model.Password
+                        Password = passwordSHA256
                     };
                     // On evoit la requête à la BDD
                     await _userRepo.AddUserAsync(users);
@@ -46,35 +48,34 @@ namespace Poll.Services
         {
             if(model.Email != null && model.Password != null)
             {
-                // Vérifier si l'email est le mot de passe sont justes
-                // Grace à une function dans le repo
-                if (_userRepo.AuthenticatedAsync(model.Email, model.Password))
+                User user = _userRepo.GetUserByEmail(model.Email);
+                if (user != null)
                 {
-                    User user = _userRepo.GetUserByEmail(model.Email);
-                    // Sortir l'entité User grace à une function dans le User
-                    var claims = new List<Claim>()
+                    var passwordTocheck = EasyEncryption.SHA.ComputeSHA256Hash(model.Password);
+                    if (passwordTocheck == user.Password)
                     {
-                        new Claim("Email", user.Email),
-                    };
-                    var identity = new ClaimsIdentity(claims, "Cookies");
-                    var pricipal = new ClaimsPrincipal(identity);
+                        var claims = new List<Claim>()
+                        {
+                            new Claim("Email", user.Email),
+                        };
+                        var identity = new ClaimsIdentity(claims, "Cookies");
+                        var pricipal = new ClaimsPrincipal(identity);
 
-                    var properties = new AuthenticationProperties()
-                    {
-                        IsPersistent = true
-                    };
+                        var properties = new AuthenticationProperties()
+                        {
+                            IsPersistent = true
+                        };
 
-                    await _httpContext.SignInAsync(
-                        "Cookies",
-                        pricipal, 
-                        properties
-                    );
-                    return true;
+                        await _httpContext.SignInAsync(
+                            "Cookies",
+                            pricipal, 
+                            properties
+                        );
+                        return true;
+                    }
                 }
-                
             }
                 return false;
-            
         }
 
         public User GetUserWithClaims()
