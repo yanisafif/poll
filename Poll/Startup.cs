@@ -12,6 +12,7 @@ using Poll.Services;
 using Poll.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 
+||||||| parent of bbb6c9f (fix merge 1)
 namespace Poll
 {
     public class Startup
@@ -38,11 +39,16 @@ namespace Poll
             services.AddScoped<ISurveyService, SurveyService>();
             services.AddScoped<IUsersService, UsersService>();
 
+||||||| parent of bbb6c9f (fix merge 1)
+            services.AddScoped<IVoteService, VoteService>();
+    
+            services.AddScoped<IVoteRepository, VoteRepository>();
             services.AddScoped<ISurveyRepository, SurveyRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
 
             services.AddHttpContextAccessor();
 ||||||| parent of a019015 (Add Multiple choice vote)
+||||||| parent of bbb6c9f (fix merge 1)
 
             services.AddControllersWithViews();
         }
