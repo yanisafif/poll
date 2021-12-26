@@ -7,12 +7,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Poll.Services.ViewModel
 {
-    public class SurveyPreviewViewModel
+    public class AddVoteViewModel
     {
-        public string PollName { get; set; }
-        public string UserName { get; set; }
-        public string CreationDate { get; set; }
-        public bool IsActive { get; set; }
+        public string Guid;
+        public int ChoiceId;
         
     }
 }

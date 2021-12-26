@@ -48,11 +48,24 @@ namespace Poll
 
             services.AddScoped<ISurveyService, SurveyService>();
             services.AddScoped<IUsersService, UsersService>();
-
+            services.AddScoped<IVoteService, VoteService>();
+    
+            services.AddScoped<IVoteRepository, VoteRepository>();
             services.AddScoped<ISurveyRepository, SurveyRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
 
             services.AddHttpContextAccessor();
+
+            services.AddAuthentication("Cookies")
+                .AddCookie("Cookies", config =>
+                {
+                    config.LoginPath = "/home/login";
+                    config.LogoutPath = "/home/logout";
+                    config.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    // Si la personne fais une requete le cookie va de nouveau valoir 60mn
+                    config.SlidingExpiration = true;
+                    config.Cookie.IsEssential = true;
+                });
 
             services.AddControllersWithViews();
         }
@@ -80,7 +93,7 @@ namespace Poll
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{guid?}");
             });
         }
     }

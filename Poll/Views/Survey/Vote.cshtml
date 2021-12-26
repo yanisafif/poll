@@ -1,0 +1,44 @@
+@using Poll.Services.ViewModel;
+@model VoteViewModel
+@{
+    ViewData["Title"] = "Voter";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>@Model.PollName</h4>
+<h5>Nombre de votant : @Model.NumberOfVoter</h5>
+<hr />
+@if(!String.IsNullOrWhiteSpace(Model.Description))
+{
+    <p class="px-5">
+        @Model.Description
+    </p>
+}
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Vote" asp method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div id="choice-container">
+                @for (int i = 0; i < Model.Choices.Count(); i++)
+                    {
+                        <div class="form-group">
+                            <input class="checkbox" type="checkbox" asp-for="@Model.Choices[i].Selected"/>
+                            <label class="control-label"> @Model.Choices[i].Name </label>
+                            <input type="hidden" asp-for="@Model.Choices[i].Id" />
+                            <input type="hidden" asp-for="@Model.Choices[i].SelectedBefore" />
+                        </div>
+                    }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @if(!Model.IsMultipleChoice)
+    {
+        <script type="text/javascript" src="/js/Survey/VoteSingleChoice.js"></script>
+    }
+}

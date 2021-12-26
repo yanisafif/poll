@@ -1,5 +1,5 @@
 ﻿@using Poll.Services.ViewModel;
-@model IEnumerable<SurveyPreviewViewModel>;
+@model IEnumerable<SurveyViewModel>;
 
 @{
     ViewData["Title"] = "Liste des sondages";
@@ -17,13 +17,14 @@
         <span class="col">Créateur</span>
         <span class="col">Statut</span>
         <span class="col">Date de création</span>
+        <span class="col">Actions</span>
     </div>
-    @foreach(SurveyPreviewViewModel survey in Model)
+    @foreach(SurveyViewModel survey in Model)
     {
         <div class="card my-2">
-            <div class="row py-2 pointer text-center">
+            <div class="row py-2 text-center">
                 <h2 class="col">@survey.PollName</h2>
-                <span class="col">@survey.UserName</span>
+                <span class="col">@survey.Username</span>
                 @if(survey.IsActive)
                 {
                     <span class="col">Ouvert</span>
@@ -33,7 +34,25 @@
                     <span class="col">Fermé</span>
                 }
                 <span class="col">@survey.CreationDate</span>
+                <span class="col">
+                    @if(survey.IsActive)
+                    {
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Vote/@survey.Guid">Voter</a> </div>
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.Guid">Désactiver</a> </div>
+                    }
+                    else 
+                    {
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.Guid">Voire les résultats</a> </div>
+                    }
+                </span>
             </div>
+
+            @if(!String.IsNullOrWhiteSpace(survey.Description))
+            {
+                <p class="px-5">
+                    @survey.Description
+                </p>
+            }
         </div>
     }
 </div>
