@@ -21,14 +21,27 @@ namespace Poll.Controllers
             _usersService = users;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            
+            if (User.Identity.IsAuthenticated)
+            {
+                var userConnected = _usersService.GetUserWithClaims();
+                ViewData["Claims"] = userConnected.Pseudo;
+            }
+
             return View();
         }
+
+        [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+            {
+                return View();
+            }else{
+                return Redirect("index");
+            }
         }
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -40,7 +53,13 @@ namespace Poll.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+            {
+                return View();
+            }else{
+                return Redirect("index");
+            }
+            
         }
 
         [HttpPost]
