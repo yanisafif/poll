@@ -12,7 +12,6 @@ using Poll.Services;
 using Poll.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 
-||||||| parent of bbb6c9f (fix merge 1)
 namespace Poll
 {
     public class Startup
@@ -38,8 +37,6 @@ namespace Poll
 
             services.AddScoped<ISurveyService, SurveyService>();
             services.AddScoped<IUsersService, UsersService>();
-
-||||||| parent of bbb6c9f (fix merge 1)
             services.AddScoped<IVoteService, VoteService>();
     
             services.AddScoped<IVoteRepository, VoteRepository>();
@@ -47,8 +44,17 @@ namespace Poll
             services.AddScoped<IUsersRepository, UsersRepository>();
 
             services.AddHttpContextAccessor();
-||||||| parent of a019015 (Add Multiple choice vote)
-||||||| parent of bbb6c9f (fix merge 1)
+
+            services.AddAuthentication("Cookies")
+                .AddCookie("Cookies", config =>
+                {
+                    config.LoginPath = "/home/login";
+                    config.LogoutPath = "/home/logout";
+                    config.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    // Si la personne fais une requete le cookie va de nouveau valoir 60mn
+                    config.SlidingExpiration = true;
+                    config.Cookie.IsEssential = true;
+                });
 
             services.AddControllersWithViews();
         }
