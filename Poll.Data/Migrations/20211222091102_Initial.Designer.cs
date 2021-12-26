@@ -9,15 +9,15 @@ using Poll.Data;
 namespace Poll.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211212143547_initial")]
-    partial class initial
+    [Migration("20211222091102_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.5");
+                .HasAnnotation("ProductVersion", "5.0.12");
 
             modelBuilder.Entity("Poll.Data.Model.Choice", b =>
                 {
@@ -49,6 +49,9 @@ namespace Poll.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Guid")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsActive")

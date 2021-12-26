@@ -14,17 +14,19 @@ namespace Poll.Controllers
     {
         private readonly ILogger<SurveyController> _logger;
         private readonly ISurveyService _surveyService;
+        private readonly IVoteService _voteService;
 
-        public SurveyController(ILogger<SurveyController> logger, ISurveyService surveyService)
+        public SurveyController(ILogger<SurveyController> logger, ISurveyService surveyService, IVoteService voteService)
         {
             _logger = logger;
             _surveyService = surveyService;
+            _voteService = voteService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<SurveyPreviewViewModel> models = await this._surveyService.GetListPreviewAsync();
+            IEnumerable<SurveyViewModel> models = await this._surveyService.GetList();
 
             return View(models);
         }
@@ -42,6 +44,37 @@ namespace Poll.Controllers
                 return View(model);
             
            await this._surveyService.AddSurveyAsync(model);
+
+            return Redirect("/Survey");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Vote([FromRoute] string guid)
+        {
+            
+            VoteViewModel model;
+            try
+            {
+                model = await this._voteService.GetVoteViewModelAsync(guid);
+            }
+            catch(SurveyDeactivatedException)
+            {
+                return Redirect($"/Survey/Result/{guid}");
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
+        {
+            await this._voteService.AddVote(guid, a);
+
+            return Redirect("/Survey");
+        }
+
+        public async Task<IActionResult> Deactivate([FromRoute] string guid)
+        {
+            await this._surveyService.DeactivateAsync(guid);
 
             return Redirect("/Survey");
         }

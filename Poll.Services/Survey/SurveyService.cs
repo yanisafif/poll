@@ -1,70 +1,108 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Poll.Services.ViewModel;
-using Poll.Data.Repositories;
-using Poll.Data.Model;
-
-namespace Poll.Services
-{
-    public class SurveyService : ISurveyService
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Poll.Services.ViewModel;
+    using Poll.Data.Repositories;
+    using Poll.Data.Model;
+    using Microsoft.Extensions.Logging;
+    namespace Poll.Services
     {
-        private readonly ISurveyRepository _surveyRepo;
-
-        public SurveyService(ISurveyRepository surveyRepo)
+        public class SurveyService : ISurveyService
         {
-            this._surveyRepo = surveyRepo;
-        }
+            private readonly ISurveyRepository _surveyRepo;
+            private readonly IVoteRepository _voteRepo;
+            private readonly ILogger<ISurveyService> _logger;
 
-        public async Task<IEnumerable<SurveyPreviewViewModel>> GetListPreviewAsync()
-        {
-            List<Survey> surveys = await this._surveyRepo.GetListAsync();
+            public SurveyService(
+                ISurveyRepository surveyRepo, 
+                IVoteRepository voteRepo,
+                ILogger<ISurveyService> logger
+            )
+            {
+                this._surveyRepo = surveyRepo;
+                this._voteRepo = voteRepo;
+                this._logger = logger;
+            }
 
-            if(surveys is null || surveys.Count == 0)
-                return new List<SurveyPreviewViewModel>();
+            public async Task<IEnumerable<SurveyViewModel>> GetList()
+            {
+                List<Survey> surveys = await this._surveyRepo.GetListAsync();
 
-            IEnumerable<SurveyPreviewViewModel> models = surveys.Select((a) => 
-                new SurveyPreviewViewModel()
+                if(surveys is null || surveys.Count == 0)
+                    return new List<SurveyViewModel>();
+
+                IEnumerable<SurveyViewModel> models = surveys.Select((a) => new SurveyViewModel()
+                    {
+                        PollName = a.Name, 
+                        Username = a.User.Pseudo, 
+                        CreationDate = a.CreationDate.ToShortDateString(), 
+                        IsActive =  a.IsActive, 
+                        Description = a.Description ?? "", 
+                        Guid = a.Guid
+                    }
+                );
+
+                return models ?? new List<SurveyViewModel>();
+            }
+
+            public async Task AddSurveyAsync(AddSurveyViewModel surveyModel)
+            {
+                if (surveyModel is null)
+                    throw new ArgumentNullException(nameof(surveyModel));
+
+                if (String.IsNullOrWhiteSpace(surveyModel.Name) || surveyModel.Choices.Count < 2)
+                    throw new ArgumentException(nameof(surveyModel));
+
+                List<Choice> choices = new List<Choice>();
+                
+                foreach (string item in surveyModel.Choices)
                 {
-                    PollName = a.Name, 
-                    UserName = a.User.Pseudo, 
-                    CreationDate = a.CreationDate.ToShortDateString(), 
-                    IsActive =  a.IsActive
+                    if(String.IsNullOrWhiteSpace(item))
+                        continue;
+
+                    choices.Add(new Choice() { Name = item });
                 }
-            );
 
-            return models ?? new List<SurveyPreviewViewModel>();
-        }
+                string guid;
+                do
+                {
+                    guid = Guid.NewGuid().ToString();
+                }
+                while(await this._surveyRepo.IsGuidUsed(guid));
 
-        public async Task AddSurveyAsync(AddSurveyViewModel surveyModel)
-        {
-            if (surveyModel is null)
-                throw new ArgumentNullException(nameof(surveyModel));
+                Survey survey = new Survey()
+                {
+                    CreationDate = DateTime.Now,
+                    Description = surveyModel.Description,
+                    Choices = choices,
+                    Name = surveyModel.Name,
+                    IsActive = true,
+                    MultipleChoices = surveyModel.IsMultipleChoices, 
+                    Guid = Guid.NewGuid().ToString(),
+                    ///To Test 
+                    User = await this._surveyRepo.GetUserTest()
+                    //End To Test
+                };
 
-            if (String.IsNullOrWhiteSpace(surveyModel.Name) || surveyModel.Choices.Count < 2)
-                throw new ArgumentException(nameof(surveyModel));
+                await this._surveyRepo.AddSurveyAsync(survey);
+            }
 
-            IEnumerable<Choice> choices = surveyModel.Choices.Select((c) => new Choice()
+            public async Task DeactivateAsync(string guid)
             {
-                Name = c
-            });
+                if(String.IsNullOrWhiteSpace(guid))
+                    throw new ArgumentNullException(nameof(guid));
 
-            Survey survey = new Survey()
-            {
-                CreationDate = DateTime.Now,
-                Description = surveyModel.Description,
-                Choices = choices.ToList(),
-                Name = surveyModel.Name,
-                IsActive = true,
-                MultipleChoices = surveyModel.IsMultipleChoices, 
-                ///To Test 
-                User = await this._surveyRepo.GetUserTest()
-                //End To Test
+                Survey survey = await this._surveyRepo.GetAsync(guid); 
 
-            };
+                if(survey is null)
+                    throw new ArgumentException(nameof(guid));
+                
+                // TO DO: Check if current user owns the survey
 
-            await this._surveyRepo.AddSurveyAsync(survey);
+                survey.IsActive = false; 
+
+                await this._surveyRepo.Update(survey);
+            }
         }
     }
-}
