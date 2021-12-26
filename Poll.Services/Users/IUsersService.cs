@@ -6,7 +6,7 @@ namespace Poll.Services
 {
     public interface IUsersService
     {
-        Task RegisterAsync(RegisterViewModel model);
+        Task<bool> RegisterAsync(RegisterViewModel model);
 
         Task<bool> Authenticated(LoginViewModel model);
         User GetUserWithClaims();

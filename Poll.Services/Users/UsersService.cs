@@ -22,7 +22,7 @@ namespace Poll.Services
             _httpContext = contextAccessor.HttpContext;
         }
 
-        public async Task RegisterAsync(RegisterViewModel model)
+        public async Task<bool> RegisterAsync(RegisterViewModel model)
         {
             // On vérifie si le model n'est pas vide
             if(model.Pseudo != null && model.Email != null && model.Password != null) { 
@@ -41,8 +41,10 @@ namespace Poll.Services
                     };
                     // On envoit la requête à la BDD
                     await _userRepo.AddUserAsync(users);
+                    return true;
                 }
             }
+            return false;
         }
 
         public async Task<bool> Authenticated(LoginViewModel model)
@@ -93,7 +95,7 @@ namespace Poll.Services
 
             return user;
         }
-        
+
         public async Task Logout()
         {
             await _httpContext.SignOutAsync();

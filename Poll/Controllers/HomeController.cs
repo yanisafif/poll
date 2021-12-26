@@ -46,9 +46,15 @@ namespace Poll.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            await _usersService.RegisterAsync(model);
-
-            return Redirect("Login");
+            var resultRegistration = await _usersService.RegisterAsync(model);
+            if(resultRegistration)
+            {
+                return Redirect("Login");
+            }else{
+                ModelState.AddModelError("model", "Le pseudo ou l'email est déjà utilisé");
+                return View();
+            }
+            
         }
         [HttpGet]
         public IActionResult Login()
