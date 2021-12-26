@@ -29,6 +29,7 @@ namespace Poll.Services
                 // On vérifie si j'ai un Email ou un Pseudo similaire en bdd
                 if(_userRepo.AnyEmailOrPseudo(model.Email , model.Pseudo))
                 {
+                    // Cryptage du mot de passe à intégrer en bdd
                     var password = model.Password;
                     var passwordSHA256 = EasyEncryption.SHA.ComputeSHA256Hash(password);
                     // On rajoute dans l'entité User les informations issus du model
@@ -38,7 +39,7 @@ namespace Poll.Services
                         Email = model.Email,    
                         Password = passwordSHA256
                     };
-                    // On evoit la requête à la BDD
+                    // On envoit la requête à la BDD
                     await _userRepo.AddUserAsync(users);
                 }
             }
@@ -46,11 +47,14 @@ namespace Poll.Services
 
         public async Task<bool> Authenticated(LoginViewModel model)
         {
+            // On vérifie si le model n'est pas vide
             if(model.Email != null && model.Password != null)
             {
+                // On récupère le repo de l'email
                 User user = _userRepo.GetUserByEmail(model.Email);
                 if (user != null)
                 {
+                    // On crypte le password pour vérifier que c'est bien celui en bdd
                     var passwordTocheck = EasyEncryption.SHA.ComputeSHA256Hash(model.Password);
                     if (passwordTocheck == user.Password)
                     {
@@ -78,6 +82,9 @@ namespace Poll.Services
                 return false;
         }
 
+        /*
+        * Cette function est utile pour récupérer l'entité de l'user quand il est connecté
+        */
         public User GetUserWithClaims()
         {
             var claims = _httpContext.User.Claims.Select(c => c.Value);
@@ -86,6 +93,7 @@ namespace Poll.Services
 
             return user;
         }
+        
         public async Task Logout()
         {
             await _httpContext.SignOutAsync();
