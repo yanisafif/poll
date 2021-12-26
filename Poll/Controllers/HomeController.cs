@@ -35,7 +35,7 @@ namespace Poll.Controllers
         {
             await _usersService.RegisterAsync(model);
 
-            return Redirect("index");
+            return Redirect("Login");
         }
         [HttpGet]
         public IActionResult Login()
