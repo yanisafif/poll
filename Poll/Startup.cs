@@ -55,7 +55,6 @@ namespace Poll
             services.AddScoped<IUsersRepository, UsersRepository>();
 
             services.AddHttpContextAccessor();
-
             services.AddControllersWithViews();
         }
 
