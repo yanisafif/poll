@@ -8,10 +8,11 @@
 <h4>@Model.PollName</h4>
 <h5>Nombre de votant : @Model.NumberOfVoter</h5>
 <hr />
-@if(!String.IsNullOrWhiteSpace(survey.Description))
+@if(!String.IsNullOrWhiteSpace(Model.Description))
 {
     <p class="px-5">
-        @survey.Description
+        @Model.Description
+
     </p>
 }
 <div class="row">
