@@ -22,5 +22,6 @@ namespace Poll.Services.ViewModel
         public string Description { get; set; }
         public string Guid { get; set; }
         public bool IsCurrentUser { get; set; }
+        public bool UserDidVote { get; set; }
     }
 }

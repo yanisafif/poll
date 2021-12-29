@@ -68,6 +68,15 @@ namespace Poll.Data.Repositories
         {
             return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 2);
         }
+        
+        public bool DidUserVoteSurvey(int surveyId, int userId)
+        {
+            return Convert.ToBoolean(this._dbContext.Votes.FromSqlRaw(
+                "SELECT DISTINCT * FROM Votes  WHERE ChoiceId IN (SELECT Choices.Id FROM Surveys INNER JOIN Choices ON Choices.SurveyId = Surveys.Id WHERE Surveys.Id = {0}) AND UserId = {1}", 
+                surveyId, 
+                userId
+            ).Count());
+        }
     }
 
 }

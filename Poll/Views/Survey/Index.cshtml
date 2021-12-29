@@ -38,7 +38,17 @@
                 <span class="col">
                     @if(survey.IsActive)
                     {
-                        <div class="pointer py-1"> <a class="link" href="/Survey/Vote/@survey.Guid">Voter</a> </div>
+                        <div class="pointer py-1"> 
+                            @if(survey.UserDidVote)
+                            {
+                                <a class="link" href="/Survey/Vote/@survey.Guid">Modifier le vote</a>
+                            }
+                            else 
+                            {
+                                <a class="link" href="/Survey/Vote/@survey.Guid">Voter</a>
+
+                            }
+                        </div>
                         if(survey.IsCurrentUser)
                         {
                             <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.Guid">Désactiver</a> </div>

@@ -9,16 +9,16 @@ namespace Poll.Data.Repositories
 {
     public class UsersRepository : IUsersRepository
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
         public UsersRepository(AppDbContext db)
         {
-            _context = db;
+            _dbContext = db;
         }
 
         public bool AnyEmailOrPseudo(string email, string pseudo)
         {
 
-            if(_context.Users.Any(x => x.Email == email) || _context.Users.Any(x => x.Pseudo == pseudo))
+            if(_dbContext.Users.Any(x => x.Email == email) || _dbContext.Users.Any(x => x.Pseudo == pseudo))
                 return false;
 
             return true;
@@ -29,14 +29,15 @@ namespace Poll.Data.Repositories
             if(user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
 
         }
 
         public User GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(x => x.Email == email);
+            return _dbContext.Users.FirstOrDefault(x => x.Email == email);
         }
+
     }
 }

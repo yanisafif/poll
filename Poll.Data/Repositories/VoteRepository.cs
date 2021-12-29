@@ -15,7 +15,7 @@ namespace Poll.Data.Repositories
             this._dbContext = appDbContext;
         }
 
-        public bool DidUserVote(int userId, int choiceId)
+        public bool DidUserVoteChoice(int userId, int choiceId)
         {
             return this._dbContext.Votes.Any(f => f.Choice.Id == choiceId && f.User.Id == userId);
         }

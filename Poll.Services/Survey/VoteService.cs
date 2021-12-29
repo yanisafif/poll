@@ -41,7 +41,7 @@ namespace Poll.Services
             
             IEnumerable<ChoiceViewModel> choices = survey.Choices.Select(m => 
             {
-                bool isSelected = this._voteRepo.DidUserVote(user.Id, m.Id);
+                bool isSelected = this._voteRepo.DidUserVoteChoice(user.Id, m.Id);
                 return new ChoiceViewModel() 
                 {
                     Id = m.Id,

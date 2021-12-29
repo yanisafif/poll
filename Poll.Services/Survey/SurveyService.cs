@@ -15,15 +15,19 @@ namespace Poll.Services
         private readonly IVoteRepository _voteRepo;
         private readonly IUsersService _userService;
 
+        private readonly ILogger<SurveyService> _logger;
+
         public SurveyService(
             ISurveyRepository surveyRepo, 
             IVoteRepository voteRepo,
-            IUsersService usersService
+            IUsersService usersService, 
+            ILogger<SurveyService> logger
         )
         {
             this._surveyRepo = surveyRepo;
             this._voteRepo = voteRepo;
             this._userService = usersService;
+            this._logger = logger;
         }
 
         public async Task<SurveyListViewModel> GetList()
@@ -52,7 +56,8 @@ namespace Poll.Services
                     IsActive =  a.IsActive, 
                     Description = a.Description ?? "", 
                     Guid = a.Guid,
-                    IsCurrentUser = a.User.Id == userId
+                    IsCurrentUser = a.User.Id == userId, 
+                    UserDidVote = userId == 0 ? false : this._surveyRepo.DidUserVoteSurvey(a.Id, userId)
                 }
             );
 
@@ -108,8 +113,6 @@ namespace Poll.Services
 
             if(survey is null)
                 throw new ArgumentException(nameof(guid));
-            
-            // TO DO: Check if current user owns the survey
 
             User user = this._userService.GetUserWithClaims();
 
