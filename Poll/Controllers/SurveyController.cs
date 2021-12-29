@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Poll.Services;
 using Poll.Services.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Poll.Controllers
 {
@@ -26,29 +27,43 @@ namespace Poll.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<SurveyViewModel> models = await this._surveyService.GetList();
+            SurveyListViewModel model = await this._surveyService.GetList();
 
-            return View(models);
+            return View(model);
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(AddSurveyViewModel model)
         {
             if(!ModelState.IsValid)
                 return View(model);
             
-           await this._surveyService.AddSurveyAsync(model);
+            try
+            {
+                await this._surveyService.AddSurveyAsync(model);
+            }
+            catch(Exception e) when (
+                e is ArgumentException ||
+                e is ArgumentNullException
+            )
+            {
+                ModelState.AddModelError("model", "Une erreur s'est produite");
+                return View(model);
+            }
 
             return Redirect("/Survey");
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Vote([FromRoute] string guid)
         {
             
@@ -61,9 +76,18 @@ namespace Poll.Controllers
             {
                 return Redirect($"/Survey/Result/{guid}");
             }
+            catch(Exception e) when (
+                e is ArgumentException ||
+                e is ArgumentNullException
+            )
+            {
+                return Redirect("/Survey");
+            }
+
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
         {
@@ -72,6 +96,7 @@ namespace Poll.Controllers
             return Redirect("/Survey");
         }
 
+        [Authorize]
         public async Task<IActionResult> Deactivate([FromRoute] string guid)
         {
             await this._surveyService.DeactivateAsync(guid);

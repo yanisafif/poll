@@ -7,6 +7,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Poll.Services.ViewModel
 {
+    public class SurveyListViewModel
+    {
+        public bool UserIsLoggedIn { get; set; }
+        public IEnumerable<SurveyViewModel> ListOfSurvey { get; set; }
+    }
+
     public class SurveyViewModel
     {
         public string PollName { get; set; }
@@ -15,6 +21,6 @@ namespace Poll.Services.ViewModel
         public bool IsActive { get; set; }
         public string Description { get; set; }
         public string Guid { get; set; }
-        
+        public bool IsCurrentUser { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@using Poll.Services.ViewModel;
-@model IEnumerable<SurveyViewModel>;
+@model SurveyListViewModel;
 
 @{
     ViewData["Title"] = "Liste des sondages";
@@ -8,6 +8,7 @@
 <h1>@ViewData["Title"]</h1>
 
 <div>
+
 <button onclick="window.location.href = '/Survey/Create'">Créer un sondage</button>
 </div>
 
@@ -19,7 +20,7 @@
         <span class="col">Date de création</span>
         <span class="col">Actions</span>
     </div>
-    @foreach(SurveyViewModel survey in Model)
+    @foreach(SurveyViewModel survey in Model.ListOfSurvey)
     {
         <div class="card my-2">
             <div class="row py-2 text-center">
@@ -38,7 +39,10 @@
                     @if(survey.IsActive)
                     {
                         <div class="pointer py-1"> <a class="link" href="/Survey/Vote/@survey.Guid">Voter</a> </div>
-                        <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.Guid">Désactiver</a> </div>
+                        if(survey.IsCurrentUser)
+                        {
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.Guid">Désactiver</a> </div>
+                        }
                     }
                     else 
                     {
