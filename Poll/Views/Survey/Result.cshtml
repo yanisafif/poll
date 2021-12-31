@@ -14,8 +14,6 @@
 <script>
     let lab = [];
     let dat = [];
-
-    let i = 0;console.log(i);
 </script>
 @foreach (var item in Model) {
     <script>
@@ -33,7 +31,7 @@
   const data = {
     labels: labels,
     datasets: [{
-      label: 'Résultat du vote',
+      label: 'Résultat du sondage',
       backgroundColor: 'rgb(255, 99, 132)',
       borderColor: 'rgb(255, 99, 132)',
       data: dat,
@@ -47,8 +45,7 @@
         indexAxis: 'y',
       }
     };
-</script>
-<script>
+
   const myChart = new Chart(
     document.getElementById('myChart'),
     config
