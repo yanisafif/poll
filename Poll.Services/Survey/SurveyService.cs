@@ -105,8 +105,10 @@
                 await this._surveyRepo.Update(survey);
             }
 
-        public List<ResultViewModel> GetResult(int idSurvey)
+        public List<ResultViewModel> GetResult(string guid)
         {
+            var idSurvey = _surveyRepo.GetIdSurvey(guid);
+
             var choices = _surveyRepo.GetChoicesAsync(idSurvey);
 
             if (choices is null)return null;

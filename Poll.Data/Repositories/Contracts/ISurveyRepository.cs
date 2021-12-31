@@ -25,5 +25,6 @@ namespace Poll.Data.Repositories
 
         List<Choice> GetChoicesAsync(int surveyId);
         int GetVotesByChoices(int choiceId);
+        int GetIdSurvey(string guid);
     }
 }

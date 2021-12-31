@@ -79,10 +79,11 @@ namespace Poll.Controllers
             return Redirect("/Survey");
         }
         [HttpGet]
-        public IActionResult Result([FromRoute]int guid)
+        public IActionResult Result([FromRoute]string guid)
         { 
             var data = _surveyService.GetResult(guid);
-            
+            if (data == null) { return View("Error"); 
+            }
             return View(data);
         }
     }

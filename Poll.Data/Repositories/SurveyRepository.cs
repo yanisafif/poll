@@ -92,5 +92,10 @@ namespace Poll.Data.Repositories
                 return 0;
             }
         }
+        public int GetIdSurvey(string guid)
+        {
+            var idSurvey = _dbContext.Surveys.Where(s => s.Guid == guid).Select(s => s.Id).ToArray();
+            return idSurvey[0];
+        }
     }
 }
