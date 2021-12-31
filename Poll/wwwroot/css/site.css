@@ -69,3 +69,18 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+.link {
+  text-decoration: underline !important;
+  color: blue !important;
+}
+
+.clear-p {
+  margin-block-start: 0px !important; 
+  margin-block-end: 0px !important;
+  margin-bottom: 0px !important;
+}
