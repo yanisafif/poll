@@ -68,6 +68,29 @@ namespace Poll.Data.Repositories
         {
             return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 2);
         }
-    }
 
+        public List<Choice> GetChoicesAsync(int surveyId)
+        {
+            var choice = this._dbContext.Choices.FromSqlRaw(
+                 "SELECT * FROM choices WHERE SurveyId = {0}", surveyId).ToList();
+            if (choice.Count == 0)  return null; 
+            return choice;
+        }
+
+        public int GetVotesByChoices(int choiceId)
+        {
+            var vote = this._dbContext.Votes.FromSqlRaw(
+                 "SELECT Id FROM votes WHERE choiceId = {0}",
+                 choiceId).Count();
+
+            if (vote > 0)
+            {
+                return vote;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
 }

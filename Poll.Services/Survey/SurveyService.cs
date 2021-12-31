@@ -104,5 +104,27 @@
 
                 await this._surveyRepo.Update(survey);
             }
+
+        public List<ResultViewModel> GetResult(int idSurvey)
+        {
+            var choices = _surveyRepo.GetChoicesAsync(idSurvey);
+
+            if (choices is null)return null;
+
+            List<ResultViewModel> choiceN = new List<ResultViewModel>();
+
+            foreach(var choice in choices)
+            {
+                ResultViewModel objcvm = new ResultViewModel();
+                objcvm.IdChoice = choice.Id;
+                objcvm.NameChoice = choice.Name;
+                objcvm.vote = _surveyRepo.GetVotesByChoices(choice.Id);
+
+                choiceN.Add(objcvm);
+
+            }
+
+            return choiceN;
         }
     }
+}

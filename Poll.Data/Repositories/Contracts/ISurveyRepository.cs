@@ -22,5 +22,8 @@ namespace Poll.Data.Repositories
         Task<bool> IsGuidUsed(string guid);
 
         Task Update(Survey survey);
+
+        List<Choice> GetChoicesAsync(int surveyId);
+        int GetVotesByChoices(int choiceId);
     }
 }
