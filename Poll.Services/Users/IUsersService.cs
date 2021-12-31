@@ -11,5 +11,6 @@ namespace Poll.Services
         Task<bool> Authenticated(LoginViewModel model);
         User GetUserWithClaims();
         Task Logout();
+        bool IsUserLoggedIn();
     }
 }

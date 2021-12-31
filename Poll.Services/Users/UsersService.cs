@@ -81,7 +81,7 @@ namespace Poll.Services
                     }
                 }
             }
-                return false;
+            return false;
         }
 
         /*
@@ -92,8 +92,12 @@ namespace Poll.Services
             var claims = _httpContext.User.Claims.Select(c => c.Value);
             var claimsEmail = string.Join(Environment.NewLine, claims);
             User user = _userRepo.GetUserByEmail(claimsEmail);
-
             return user;
+        }
+
+        public bool IsUserLoggedIn()
+        {
+            return _httpContext.User.Identity.IsAuthenticated;
         }
 
         public async Task Logout()

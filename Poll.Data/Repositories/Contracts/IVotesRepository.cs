@@ -9,7 +9,7 @@ namespace Poll.Data.Repositories
 {
     public interface IVoteRepository
     {
-        bool DidUserVote(int userId, int choiceId);
+        bool DidUserVoteChoice(int userId, int choiceId);
 
         Vote GetVote(int userId, int choiceId);
 
