@@ -122,6 +122,31 @@ namespace Poll.Services
             survey.IsActive = false; 
 
             await this._surveyRepo.Update(survey);
+            await this._surveyRepo.Update(survey);
+        }
+
+        public List<ResultViewModel> GetResult(string guid)
+        {
+            var idSurvey = _surveyRepo.GetIdSurvey(guid);
+
+            var choices = _surveyRepo.GetChoicesAsync(idSurvey);
+
+            if (choices is null)return null;
+
+            List<ResultViewModel> choiceModel = new List<ResultViewModel>();
+
+            foreach(var choice in choices)
+            {
+                ResultViewModel objcvm = new ResultViewModel();
+                objcvm.IdChoice = choice.Id;
+                objcvm.NameChoice = choice.Name;
+                objcvm.vote = _surveyRepo.GetVotesByChoices(choice.Id);
+
+                choiceModel.Add(objcvm);
+
+            }
+
+            return choiceModel;
         }
     }
 
