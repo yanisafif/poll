@@ -1,0 +1,35 @@
+@using Poll.Services.ViewModel;
+@model LinkViewModel;
+
+@{
+    ViewData["Title"] = "Liste des sondages";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4> Vous venez de créer le soudage <strong>@Model.Name</strong></h4>
+    <p>Vous pouvez retrouver les liens importants du sondage ci dessous</p>
+</div>
+
+<div class="container mt-5">
+    <p><strong>Lien de vote </strong> : <a id="vote"> </a></p>
+    <p><strong>Lien de désactivation </strong> : <a id="deactivate"> </a></p>
+    <p><strong>Lien de résultat </strong> : <a id="result"> </a></p>
+</div>
+
+@section Scripts {
+    <script>
+        const voteElement =  document.getElementById('vote')
+        voteElement.href = "../Vote/" + "@Model.GuidVote";
+        voteElement.textContent = voteElement.href;
+
+        const deactivateElement =  document.getElementById('deactivate')
+        deactivateElement.href = "../Deactivate/" + "@Model.GuidDeactivate";
+        deactivateElement.textContent = deactivateElement.href;
+
+        const resultElement =  document.getElementById('result')
+        resultElement.href = "../Result/" + "@Model.GuidResult";
+        resultElement.textContent = resultElement.href;
+    </script>
+}

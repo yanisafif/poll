@@ -11,9 +11,14 @@ namespace Poll.Services
     {
         Task<SurveyListViewModel> GetList();
 
-        Task AddSurveyAsync(AddSurveyViewModel surveyModel);
+        Task<string> AddSurveyAsync(AddSurveyViewModel surveyModel);
 
         Task DeactivateAsync(string guid);
-        List<ResultViewModel> GetResult(string guid);
+
+        Task<List<ResultViewModel>> GetResult(string guidResult);
+
+        Task<string> GetResultGuidFromVoteGuid(string voteGuid);
+
+        Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid);
     }
 }

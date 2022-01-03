@@ -49,7 +49,16 @@ namespace Poll.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Guid")
+                    b.Property<string>("GuidDeactivate")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GuidLink")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GuidResult")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GuidVote")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsActive")
@@ -142,7 +151,7 @@ namespace Poll.Data.Migrations
             modelBuilder.Entity("Poll.Data.Model.Vote", b =>
                 {
                     b.HasOne("Poll.Data.Model.Choice", "Choice")
-                        .WithMany()
+                        .WithMany("Votes")
                         .HasForeignKey("ChoiceId");
 
                     b.HasOne("Poll.Data.Model.User", "User")
@@ -152,6 +161,11 @@ namespace Poll.Data.Migrations
                     b.Navigation("Choice");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Poll.Data.Model.Choice", b =>
+                {
+                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("Poll.Data.Model.Survey", b =>

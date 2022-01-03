@@ -3,13 +3,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome @ViewData["Claims"] !</h1>
+    <h1 class="display-4">Bienvenue @ViewData["Claims"] !</h1>
     @if(@ViewData["Claims"] != null)
     {
-        <p>Go <a href="/Survey">here</a> to see all the polls.</p>
+        <p>Cliquez <a href="/Survey">ici</a> pour voir la liste des sondages.</p>
     }else{
-        <p>To see all the polls you must be connected.</p>
+        <p>Pour voter vous devez être connecter.</p>
     }
-    
-    @* RAJOUTER BIENVENU + pseudo *@
 </div>

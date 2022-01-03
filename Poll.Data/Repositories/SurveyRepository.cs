@@ -4,14 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Poll.Data.Model;
+using Microsoft.Extensions.Logging;
 using Poll.Data;
+using System.Reflection;
 
 namespace Poll.Data.Repositories
 {
+    public enum GuidType
+    {
+        Vote, 
+        Result, 
+        Deactivate, 
+        Link
+    }
+
     public class SurveyRepository : ISurveyRepository
     {
         private readonly AppDbContext _dbContext;
-        public SurveyRepository(AppDbContext appDbContext)
+        public SurveyRepository(
+            AppDbContext appDbContext
+        )
         {
             this._dbContext = appDbContext;
         }
@@ -23,12 +35,24 @@ namespace Poll.Data.Repositories
             .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public Task<Survey> GetAsync(string guid)
+        public Task<Survey> GetAsync(string guid, GuidType guidType)
         {
-            return this._dbContext.Surveys
+            var queryable = this._dbContext.Surveys
             .Include(a => a.User)
-            .Include(a => a.Choices)
-            .FirstOrDefaultAsync(m => m.Guid == guid);
+            .Include(a => a.Choices);
+
+            switch(guidType) {
+                case GuidType.Vote:  
+                    return queryable.FirstOrDefaultAsync(m => m.GuidVote == guid);
+                case GuidType.Result:
+                    return queryable.FirstOrDefaultAsync(m => m.GuidResult == guid); 
+                case GuidType.Deactivate:
+                    return queryable.FirstOrDefaultAsync(m => m.GuidDeactivate == guid);
+                case GuidType.Link:
+                    return queryable.FirstOrDefaultAsync(m => m.GuidLink == guid);
+                default: 
+                    throw new ArgumentException(nameof(guidType));
+            }
         }
 
         public Task<List<Survey>> GetListAsync()
@@ -48,11 +72,6 @@ namespace Poll.Data.Repositories
             await this._dbContext.Surveys.AddAsync(survey);
             await this._dbContext.SaveChangesAsync();
         }
-
-        public Task<bool> IsGuidUsed(string guid)
-        {
-            return this._dbContext.Surveys.AnyAsync(s => s.Guid == guid);
-        }
         
         public async Task Update(Survey survey)
         {
@@ -61,12 +80,6 @@ namespace Poll.Data.Repositories
 
             this._dbContext.Surveys.Update(survey);
             await this._dbContext.SaveChangesAsync();
-        }
-
-
-        public Task<User> GetUserTest()
-        {
-            return this._dbContext.Users.FirstOrDefaultAsync(u => u.Id == 2);
         }
         
         public bool DidUserVoteSurvey(int surveyId, int userId)
@@ -78,18 +91,16 @@ namespace Poll.Data.Repositories
             ).Count());
         }
 
-        public List<Choice> GetChoicesAsync(int surveyId)
+        public Task<List<Choice>> GetChoicesAsync(int surveyId)
         {
-            var choice = this._dbContext.Choices.FromSqlRaw(
-                 "SELECT * FROM choices WHERE SurveyId = {0}", surveyId).ToList();
-            if (choice.Count == 0)  return null; 
-            return choice;
+            return  this._dbContext.Choices.FromSqlRaw(
+                 "SELECT * FROM Choices WHERE SurveyId = {0}", surveyId).ToListAsync();
         }
 
         public int GetVotesByChoices(int choiceId)
         {
             var vote = this._dbContext.Votes.FromSqlRaw(
-                 "SELECT Id FROM votes WHERE choiceId = {0}",
+                 "SELECT Id FROM Votes WHERE choiceId = {0}",
                  choiceId).Count();
 
             if (vote > 0)
@@ -100,11 +111,6 @@ namespace Poll.Data.Repositories
             {
                 return 0;
             }
-        }
-        public int GetIdSurvey(string guid)
-        {
-            var idSurvey = _dbContext.Surveys.Where(s => s.Guid == guid).Select(s => s.Id).ToArray();
-            return idSurvey[0];
         }
     }
 }

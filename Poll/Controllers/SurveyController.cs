@@ -48,18 +48,32 @@ namespace Poll.Controllers
             
             try
             {
-                await this._surveyService.AddSurveyAsync(model);
+                string linkGuid = await this._surveyService.AddSurveyAsync(model);
+                return Redirect($"/Survey/Links/{linkGuid}");
+            }
+            catch(NotEnoughChoicesException e)
+            {
+                ModelState.AddModelError("Choices", e.Message);
+                return View(model);
             }
             catch(Exception e) when (
                 e is ArgumentException ||
                 e is ArgumentNullException
             )
             {
-                ModelState.AddModelError("model", "Une erreur s'est produite");
+                ModelState.AddModelError("All", e.Message);
                 return View(model);
             }
 
-            return Redirect("/Survey");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Links([FromRoute] string guid)
+        {
+            LinkViewModel model = await this._surveyService.GetLinkViewModelAsync(guid);
+            
+            return View(model);
         }
 
         [HttpGet]
@@ -74,21 +88,24 @@ namespace Poll.Controllers
             }
             catch(SurveyDeactivatedException)
             {
-                return Redirect($"/Survey/Result/{guid}");
+                string resultGuid = await this._surveyService.GetResultGuidFromVoteGuid(guid);
+                return Redirect($"/Survey/Result/{resultGuid}");
             }
             catch(Exception e) when (
                 e is ArgumentException ||
                 e is ArgumentNullException
             )
             {
+                _logger.LogError("Did throw", e);
                 return Redirect("/Survey");
             }
 
             return View(model);
         }
 
-        [Authorize]
+        
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
         {
             await this._voteService.AddVote(guid, a);
@@ -104,11 +121,11 @@ namespace Poll.Controllers
             return Redirect("/Survey");
         }
         [HttpGet]
-        public IActionResult Result([FromRoute]string guid)
+        public async Task<IActionResult> Result([FromRoute]string guid)
         { 
-            var data = _surveyService.GetResult(guid);
-            if (data == null) { return View("Error"); 
-            }
+
+            var data = await _surveyService.GetResult(guid);
+            if (data == null) { return View("Error"); }
             return View(data);
         }
     }
