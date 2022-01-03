@@ -13,10 +13,14 @@ namespace Poll.Data.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
-        public string Guid { get; set; }
         public bool MultipleChoices { get; set; }
         public List<Choice> Choices { get; set; }
         public User User { get; set; }
         public DateTime CreationDate { get; set; }
+
+        public string GuidVote { get; set; }
+        public string GuidResult { get; set; }
+        public string GuidDeactivate { get; set; }
+        public string GuidLink { get; set; }
     }
 }

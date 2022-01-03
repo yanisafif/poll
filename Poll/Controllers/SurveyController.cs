@@ -50,12 +50,17 @@ namespace Poll.Controllers
             {
                 await this._surveyService.AddSurveyAsync(model);
             }
+            catch(NotEnoughChoicesException e)
+            {
+                ModelState.AddModelError("Choices", e.Message);
+                return View(model);
+            }
             catch(Exception e) when (
                 e is ArgumentException ||
                 e is ArgumentNullException
             )
             {
-                ModelState.AddModelError("model", "Une erreur s'est produite");
+                ModelState.AddModelError("All", e.Message);
                 return View(model);
             }
 
@@ -74,13 +79,15 @@ namespace Poll.Controllers
             }
             catch(SurveyDeactivatedException)
             {
-                return Redirect($"/Survey/Result/{guid}");
+                string resultGuid = await this._surveyService.GetResultGuidFromVoteGuid(guid);
+                return Redirect($"/Survey/Result/{resultGuid}");
             }
             catch(Exception e) when (
                 e is ArgumentException ||
                 e is ArgumentNullException
             )
             {
+                _logger.LogError("Did throw", e);
                 return Redirect("/Survey");
             }
 
@@ -104,9 +111,9 @@ namespace Poll.Controllers
             return Redirect("/Survey");
         }
         [HttpGet]
-        public IActionResult Result([FromRoute]string guid)
+        public async Task<IActionResult> Result([FromRoute]string guid)
         { 
-            var data = _surveyService.GetResult(guid);
+            var data = await _surveyService.GetResult(guid);
             if (data == null) { return View("Error"); 
             }
             return View(data);

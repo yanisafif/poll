@@ -20,7 +20,9 @@ namespace Poll.Services.ViewModel
         public string CreationDate { get; set; }
         public bool IsActive { get; set; }
         public string Description { get; set; }
-        public string Guid { get; set; }
+        public string GuidResult { get; set; }
+        public string GuidVote { get; set; }
+        public string GuidDeactivate { get; set; }
         public bool IsCurrentUser { get; set; }
         public bool UserDidVote { get; set; }
     }
