@@ -87,8 +87,9 @@ namespace Poll.Controllers
             return View(model);
         }
 
-        [Authorize]
+        
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
         {
             await this._voteService.AddVote(guid, a);
