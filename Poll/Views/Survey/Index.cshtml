@@ -35,7 +35,7 @@
                     <span class="col">Fermé</span>
                 }
                 <span class="col">@survey.CreationDate</span>
-                <span class="col">
+                <div class="col">
                     @if(survey.IsActive)
                     {
                         <div class="pointer py-1"> 
@@ -52,13 +52,13 @@
                         {
                             <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.GuidDeactivate">Désactiver le sondage</a> </div>
                         }
-                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.Guid">Voir les résultats</a> </div>
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
                     }
                     else 
                     {
-                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voire les résultats</a> </div>
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
                     }
-                </span>
+                </div>
             </div>
 
             @if(!String.IsNullOrWhiteSpace(survey.Description))

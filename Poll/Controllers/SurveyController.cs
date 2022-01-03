@@ -124,7 +124,7 @@ namespace Poll.Controllers
         public async Task<IActionResult> Result([FromRoute]string guid)
         { 
 
-            var data = _surveyService.GetResult(guid);
+            var data = await _surveyService.GetResult(guid);
             if (data == null) { return View("Error"); }
             return View(data);
         }
