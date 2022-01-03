@@ -103,8 +103,9 @@ namespace Poll.Controllers
             return View(model);
         }
 
-        [Authorize]
+        
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
         {
             await this._voteService.AddVote(guid, a);
@@ -122,9 +123,9 @@ namespace Poll.Controllers
         [HttpGet]
         public async Task<IActionResult> Result([FromRoute]string guid)
         { 
-            var data = await _surveyService.GetResult(guid);
-            if (data == null) { return View("Error"); 
-            }
+
+            var data = _surveyService.GetResult(guid);
+            if (data == null) { return View("Error"); }
             return View(data);
         }
     }

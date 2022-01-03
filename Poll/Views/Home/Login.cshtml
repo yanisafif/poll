@@ -4,7 +4,7 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>Login</h1>
+<h1>Connexion</h1>
 
 
 <hr />
@@ -18,19 +18,19 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
+                <label asp-for="Password" class="control-label">Mot de passe</label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Connect me !" class="btn btn-primary" />
+                <input type="submit" value="Me connecter" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to Index</a>
+    <a asp-action="Index">Retour vers la page d'accueil</a>
 </div>
 
 @section Scripts {
