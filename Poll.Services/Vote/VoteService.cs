@@ -13,23 +13,28 @@ namespace Poll.Services
         private readonly ISurveyRepository _surveyRepo;
         private readonly IVoteRepository _voteRepo;
         private readonly IUsersService _userService;
+        private readonly ILogger<VoteService> _logger;
         public VoteService(
             ISurveyRepository surveyRepo, 
             IVoteRepository voteRepo,
-            IUsersService usersService
+            IUsersService usersService,
+            ILogger<VoteService> logger
         )
         {
             this._surveyRepo = surveyRepo;
             this._voteRepo = voteRepo;
             this._userService = usersService;
+            this._logger = logger;
         }
 
-        public async Task<VoteViewModel> GetVoteViewModelAsync(string guid)
+        public async Task<VoteViewModel> GetVoteViewModelAsync(string voteGuid)
         {
-            if(String.IsNullOrWhiteSpace(guid))
-                throw new ArgumentNullException(nameof(guid));
+            if(String.IsNullOrWhiteSpace(voteGuid))
+                throw new ArgumentNullException(nameof(voteGuid));
 
-            Survey survey = await this._surveyRepo.GetAsync(guid);
+            Survey survey = await this._surveyRepo.GetAsync(voteGuid, GuidType.Vote);
+
+            this._logger.LogError("Survey null : " + (survey is null));
 
             if(survey is null)
                 throw new ArgumentException();
@@ -54,7 +59,7 @@ namespace Poll.Services
             return new VoteViewModel() 
             {
                 Choices = choices.ToList(), 
-                Guid = guid,
+                Guid = voteGuid,
                 PollName = survey.Name, 
                 IsMultipleChoice =  survey.MultipleChoices, 
                 NumberOfVoter = this._voteRepo.GetNumberVoter(survey.Id), 
@@ -63,14 +68,14 @@ namespace Poll.Services
         }
 
 
-        public async Task AddVote(string guid, VoteViewModel model)
+        public async Task AddVote(string guidVote, VoteViewModel model)
         {
-            if(String.IsNullOrWhiteSpace(guid))
-                throw new ArgumentNullException(nameof(guid));
+            if(String.IsNullOrWhiteSpace(guidVote))
+                throw new ArgumentNullException(nameof(guidVote));
             if(model.Choices is null || model.Choices.Count == 0)
                 throw new ArgumentException(nameof(model.Choices));
 
-            Survey survey = await this._surveyRepo.GetAsync(guid);
+            Survey survey = await this._surveyRepo.GetAsync(guidVote, GuidType.Vote);
 
             if(survey is null)
                 throw new ArgumentException();

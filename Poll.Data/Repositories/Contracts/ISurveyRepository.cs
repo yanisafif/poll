@@ -13,22 +13,17 @@ namespace Poll.Data.Repositories
 
         Task<Survey> GetAsync(int id);
 
-        Task<Survey> GetAsync(string guid);
+        Task<Survey> GetAsync(string guid, GuidType guidType);
 
         Task AddSurveyAsync(Survey survey);
-
-        Task<User> GetUserTest();
-
-        Task<bool> IsGuidUsed(string guid);
 
         Task Update(Survey survey);
 
         bool DidUserVoteSurvey(int surveyId, int userId);
 
-        List<Choice> GetChoicesAsync(int surveyId);
+        Task<List<Choice>> GetChoicesAsync(int surveyId);
 
         int GetVotesByChoices(int choiceId);
 
-        int GetIdSurvey(string guid);
     }
 }
