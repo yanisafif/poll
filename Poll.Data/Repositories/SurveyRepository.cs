@@ -81,7 +81,7 @@ namespace Poll.Data.Repositories
         public List<Choice> GetChoicesAsync(int surveyId)
         {
             var choice = this._dbContext.Choices.FromSqlRaw(
-                 "SELECT * FROM choices WHERE SurveyId = {0}", surveyId).ToList();
+                 "SELECT * FROM Choices WHERE SurveyId = {0}", surveyId).ToList();
             if (choice.Count == 0)  return null; 
             return choice;
         }
@@ -89,7 +89,7 @@ namespace Poll.Data.Repositories
         public int GetVotesByChoices(int choiceId)
         {
             var vote = this._dbContext.Votes.FromSqlRaw(
-                 "SELECT Id FROM votes WHERE choiceId = {0}",
+                 "SELECT Id FROM Votes WHERE choiceId = {0}",
                  choiceId).Count();
 
             if (vote > 0)
