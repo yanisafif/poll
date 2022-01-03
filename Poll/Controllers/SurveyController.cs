@@ -108,8 +108,8 @@ namespace Poll.Controllers
         public IActionResult Result([FromRoute]string guid)
         { 
             var data = _surveyService.GetResult(guid);
-            if (data == null) { return View("Error"); 
-            }
+            if (data == null) { return View("Error"); }
+            
             return View(data);
         }
     }
