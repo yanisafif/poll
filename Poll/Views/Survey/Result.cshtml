@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Poll.Services.ViewModel.ResultViewModel>
+
+@{
+    ViewData["Title"] = "Result";
+}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<h1>Resultat du sondage</h1>
+
+<p>
+    <a asp-action="Index">Retour à la liste des sondages</a>
+</p>
+<script>
+    let lab = [];
+    let dat = [];
+</script>
+@foreach (var item in Model) {
+    <script>
+        lab.push("@item.NameChoice")
+        dat.push("@item.vote")
+    </script>
+}
+
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+<script>
+  const labels = lab;
+
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'Résultat du sondage',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: dat,
+    }]
+  };
+
+     const config = {
+      type: 'bar',
+      data,
+      options: {
+        indexAxis: 'y',
+      }
+    };
+
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+</script>
+
