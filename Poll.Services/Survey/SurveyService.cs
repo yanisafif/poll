@@ -66,7 +66,7 @@ namespace Poll.Services
             return model;
         }
 
-        public async Task AddSurveyAsync(AddSurveyViewModel surveyModel)
+        public async Task<string> AddSurveyAsync(AddSurveyViewModel surveyModel)
         {
             if (surveyModel is null)
                 throw new ArgumentNullException(nameof(surveyModel), "Le model est vide");
@@ -103,6 +103,8 @@ namespace Poll.Services
             };
 
             await this._surveyRepo.AddSurveyAsync(survey);
+
+            return survey.GuidLink;
         }
 
 
@@ -149,6 +151,24 @@ namespace Poll.Services
             }
 
             return choiceModel;
+        }
+
+        public async Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid)
+        {
+            Survey survey =  await this._surveyRepo.GetAsync(linkGuid, GuidType.Link);
+
+            User user = this._userService.GetUserWithClaims();
+
+            if(user.Id != survey.User.Id)
+                throw new UserNotCorrespondingException();
+
+            return new LinkViewModel()
+            {
+                GuidDeactivate = survey.GuidDeactivate, 
+                GuidResult = survey.GuidResult, 
+                GuidVote = survey.GuidVote, 
+                Name = survey.Name
+            };
         }
 
         public async Task<string> GetResultGuidFromVoteGuid(string voteGuid) 

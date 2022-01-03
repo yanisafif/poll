@@ -48,7 +48,8 @@ namespace Poll.Controllers
             
             try
             {
-                await this._surveyService.AddSurveyAsync(model);
+                string linkGuid = await this._surveyService.AddSurveyAsync(model);
+                return Redirect($"/Survey/Links/{linkGuid}");
             }
             catch(NotEnoughChoicesException e)
             {
@@ -64,7 +65,15 @@ namespace Poll.Controllers
                 return View(model);
             }
 
-            return Redirect("/Survey");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Links([FromRoute] string guid)
+        {
+            LinkViewModel model = await this._surveyService.GetLinkViewModelAsync(guid);
+            
+            return View(model);
         }
 
         [HttpGet]
