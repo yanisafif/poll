@@ -41,23 +41,22 @@
                         <div class="pointer py-1"> 
                             @if(survey.UserDidVote)
                             {
-                                <a class="link" href="/Survey/Vote/@survey.Guid">Modifier mon vote</a>
+                                <a class="link" href="/Survey/Vote/@survey.GuidVote">Modifier mon vote</a>
                             }
                             else 
                             {
-                                <a class="link" href="/Survey/Vote/@survey.Guid">Voter</a>
-
+                                <a class="link" href="/Survey/Vote/@survey.GuidVote">Voter</a>
                             }
                         </div>
                         if(survey.IsCurrentUser)
                         {
-                            <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.Guid">Désactiver le sondage</a> </div>
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.GuidDeactivate">Désactiver le sondage</a> </div>
                         }
                         <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.Guid">Voir les résultats</a> </div>
                     }
                     else 
                     {
-                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.Guid">Voir les résultats</a> </div>
+                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voire les résultats</a> </div>
                     }
                 </span>
             </div>

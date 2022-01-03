@@ -9,8 +9,8 @@ using Poll.Data;
 namespace Poll.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211222091102_Initial")]
-    partial class Initial
+    [Migration("20220103094541_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,7 +51,16 @@ namespace Poll.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Guid")
+                    b.Property<string>("GuidDeactivate")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GuidLink")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GuidResult")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GuidVote")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsActive")
@@ -144,7 +153,7 @@ namespace Poll.Data.Migrations
             modelBuilder.Entity("Poll.Data.Model.Vote", b =>
                 {
                     b.HasOne("Poll.Data.Model.Choice", "Choice")
-                        .WithMany()
+                        .WithMany("Votes")
                         .HasForeignKey("ChoiceId");
 
                     b.HasOne("Poll.Data.Model.User", "User")
@@ -154,6 +163,11 @@ namespace Poll.Data.Migrations
                     b.Navigation("Choice");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Poll.Data.Model.Choice", b =>
+                {
+                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("Poll.Data.Model.Survey", b =>
