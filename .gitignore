@@ -365,3 +365,4 @@ FodyWeavers.xsd
 
 global.json
 Poll/appsettings.Development.json
+poll.service
