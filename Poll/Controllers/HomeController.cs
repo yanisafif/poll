@@ -84,11 +84,8 @@ namespace Poll.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult Privacy()
         {
-            var userConnected = _usersService.GetUserWithClaims();
-            ViewData["Claims"] = userConnected.Email;
             return View();
         }
 
