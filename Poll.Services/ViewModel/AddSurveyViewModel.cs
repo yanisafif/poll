@@ -21,5 +21,8 @@ namespace Poll.Services.ViewModel
         [Display(Name = "Plusieurs choix sont possible")]
         public bool IsMultipleChoices { get; set; }
 
+        [Display(Name = "Rendre le sondage privé")]
+        public bool IsPrivate { get; set; }
+
     }
 }

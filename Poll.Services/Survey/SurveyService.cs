@@ -94,6 +94,7 @@ namespace Poll.Services
                 Choices = choices,
                 Name = surveyModel.Name,
                 IsActive = true,
+                IsPrivate = surveyModel.IsPrivate,
                 MultipleChoices = surveyModel.IsMultipleChoices, 
                 GuidDeactivate = Guid.NewGuid().ToString(),
                 GuidLink = Guid.NewGuid().ToString(),
