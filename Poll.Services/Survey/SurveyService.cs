@@ -30,14 +30,14 @@ namespace Poll.Services
             this._logger = logger;
         }
 
-        public async Task<SurveyListViewModel> GetList()
+        public SurveyListViewModel GetList()
         {
-            List<Survey> surveys = await this._surveyRepo.GetListAsync();
-
             int userId = 0;
 
             if(this._userService.IsUserLoggedIn())
                 userId = this._userService.GetUserWithClaims().Id;
+
+            List<Survey> surveys = this._surveyRepo.GetList(userId).ToList();
 
             SurveyListViewModel model = new SurveyListViewModel()
             {
@@ -45,7 +45,7 @@ namespace Poll.Services
                 UserIsLoggedIn = userId != 0
             };
 
-            if(surveys is null || surveys.Count == 0)
+            if(surveys is null)
                 return model;
 
             model.ListOfSurvey = surveys.Select((a) => new SurveyViewModel()
