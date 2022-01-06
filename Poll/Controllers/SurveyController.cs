@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Poll.Services;
 using Poll.Services.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Poll.Data.Model;
 
 namespace Poll.Controllers
 {
@@ -123,9 +124,16 @@ namespace Poll.Controllers
         [HttpGet]
         public async Task<IActionResult> Result([FromRoute]string guid)
         { 
+            Survey survey = await _surveyService.GetSurveyAsync(guid);
+            if (survey == null) { return Redirect("/Survey"); }
 
-            var data = await _surveyService.GetResult(guid);
+            ViewData["Name"] = survey.Name ;
+            ViewData["Description"] = survey.Description;
+            ViewData["Vote"] = _surveyService.GetNumberVote(survey.Id);
+
+            var data = await _surveyService.GetResult(survey.Id);
             if (data == null) { return View("Error"); }
+
             return View(data);
         }
     }

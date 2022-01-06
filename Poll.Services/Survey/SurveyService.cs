@@ -129,10 +129,8 @@ namespace Poll.Services
             await this._surveyRepo.Update(survey);
         }
 
-        public async Task<List<ResultViewModel>> GetResult(string guidResult)
+        public async Task<List<ResultViewModel>> GetResult(int idSurvey)
         {
-            var idSurvey = (await _surveyRepo.GetAsync(guidResult, GuidType.Result)).Id;
-
             var choices = await _surveyRepo.GetChoicesAsync(idSurvey);
 
             if (choices is null || choices.Count == 0) return null;
@@ -151,6 +149,16 @@ namespace Poll.Services
             }
 
             return choiceModel;
+        }
+
+        public async Task<Survey> GetSurveyAsync(string guidResult)
+        {
+            return await _surveyRepo.GetAsync(guidResult, GuidType.Result);
+        }
+
+        public int GetNumberVote(int idSurvey)
+        {
+            return _voteRepo.GetNumberVoter(idSurvey);
         }
 
         public async Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid)

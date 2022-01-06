@@ -106,5 +106,10 @@ namespace Poll.Data.Repositories
                 return 0;
             }
         }
+
+        public async Task<Survey> GetSurveyByGuidAsync(string guid)
+        {
+            return await _dbContext.Surveys.FirstOrDefaultAsync(f => f.GuidResult == guid);
+        }
     }
 }
