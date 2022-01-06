@@ -9,7 +9,7 @@ namespace Poll.Data.Repositories
 {
     public interface ISurveyRepository
     {
-        IEnumerable<Survey> GetList(int currentUserId);
+        Task<List<Survey>> GetListAsync(int currentUserId);
 
         Task<Survey> GetAsync(int id);
 
@@ -17,7 +17,7 @@ namespace Poll.Data.Repositories
 
         Task AddSurveyAsync(Survey survey);
 
-        Task Update(Survey survey);
+        Task UpdateAsync(Survey survey);
 
         bool DidUserVoteSurvey(int surveyId, int userId);
 

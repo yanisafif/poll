@@ -9,21 +9,21 @@ namespace Poll.Services
 {
     public interface ISurveyService
     {
-        IEnumerable<SurveyViewModel> GetList();
+        Task<IEnumerable<SurveyViewModel>> GetListAsync();
 
         Task<string> AddSurveyAsync(AddSurveyViewModel surveyModel);
 
         Task DeactivateAsync(string guid);
 
-        Task<List<ResultViewModel>> GetResult(int idSurvey);
+        Task<List<ResultViewModel>> GetResultAsync(int idSurvey);
 
         Task<Survey> GetSurveyAsync(string guidResult);
 
-        Task<string> GetResultGuidFromVoteGuid(string voteGuid);
+        Task<string> GetResultGuidFromVoteGuidAsync(string voteGuid);
         int GetNumberVote(int idSurvey);
 
         Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid);
 
-        Task SendEmailInvitation(LinkViewModel model);
+        Task SendEmailInvitationAsync(LinkViewModel model);
     }
 }

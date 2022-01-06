@@ -68,7 +68,7 @@ namespace Poll.Services
         }
 
 
-        public async Task AddVote(string guidVote, VoteViewModel model)
+        public async Task AddVoteAsync(string guidVote, VoteViewModel model)
         {
             if(String.IsNullOrWhiteSpace(guidVote))
                 throw new ArgumentNullException(nameof(guidVote));

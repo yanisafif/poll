@@ -47,7 +47,7 @@ namespace Poll.Services
             return false;
         }
 
-        public async Task<bool> Authenticated(LoginViewModel model)
+        public async Task<bool> AuthenticatedAsync(LoginViewModel model)
         {
             // On vérifie si le model n'est pas vide
             if(model.Email != null && model.Password != null)
@@ -100,7 +100,7 @@ namespace Poll.Services
             return _httpContext.User.Identity.IsAuthenticated;
         }
 
-        public async Task Logout()
+        public async Task LogoutAsync()
         {
             await _httpContext.SignOutAsync();
         }

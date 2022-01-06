@@ -37,14 +37,14 @@ namespace Poll.Services
             this._configuration = configuration;
         }
 
-        public IEnumerable<SurveyViewModel> GetList()
+        public async Task<IEnumerable<SurveyViewModel>> GetListAsync()
         {
             int userId = 0;
 
             if(this._userService.IsUserLoggedIn())
                 userId = this._userService.GetUserWithClaims().Id;
 
-            List<Survey> surveys = this._surveyRepo.GetList(userId).ToList();
+            List<Survey> surveys = await this._surveyRepo.GetListAsync(userId);
 
             if(surveys is null)
                 return new List<SurveyViewModel>();
@@ -127,10 +127,10 @@ namespace Poll.Services
 
             survey.IsActive = false; 
 
-            await this._surveyRepo.Update(survey);
+            await this._surveyRepo.UpdateAsync(survey);
         }
 
-        public async Task<List<ResultViewModel>> GetResult(int idSurvey)
+        public async Task<List<ResultViewModel>> GetResultAsync(int idSurvey)
         {
             var choices = await _surveyRepo.GetChoicesAsync(idSurvey);
 
@@ -181,12 +181,12 @@ namespace Poll.Services
             };
         }
 
-        public async Task<string> GetResultGuidFromVoteGuid(string voteGuid) 
+        public async Task<string> GetResultGuidFromVoteGuidAsync(string voteGuid) 
         {
             return (await this._surveyRepo.GetAsync(voteGuid, GuidType.Vote)).GuidResult;
         }
 
-        public async Task SendEmailInvitation(LinkViewModel model)
+        public async Task SendEmailInvitationAsync(LinkViewModel model)
         {
             if(model is null || String.IsNullOrWhiteSpace(model.GuidLink))
                 throw new ArgumentNullException(nameof(model));

@@ -26,9 +26,9 @@ namespace Poll.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<SurveyViewModel> model = this._surveyService.GetList();
+            IEnumerable<SurveyViewModel> model = await this._surveyService.GetListAsync();
 
             return View(model);
         }
@@ -81,7 +81,7 @@ namespace Poll.Controllers
         [Authorize]
         public async Task<IActionResult> Invite(LinkViewModel model)
         {
-            await this._surveyService.SendEmailInvitation(model);
+            await this._surveyService.SendEmailInvitationAsync(model);
 
             return Redirect("/Survey");
         }
@@ -98,7 +98,7 @@ namespace Poll.Controllers
             }
             catch(SurveyDeactivatedException)
             {
-                string resultGuid = await this._surveyService.GetResultGuidFromVoteGuid(guid);
+                string resultGuid = await this._surveyService.GetResultGuidFromVoteGuidAsync(guid);
                 return Redirect($"/Survey/Result/{resultGuid}");
             }
             catch(Exception e) when (
@@ -118,7 +118,7 @@ namespace Poll.Controllers
         [Authorize]
         public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
         {
-            await this._voteService.AddVote(guid, a);
+            await this._voteService.AddVoteAsync(guid, a);
 
             return Redirect("/Survey");
         }
@@ -140,7 +140,7 @@ namespace Poll.Controllers
             ViewData["Description"] = survey.Description;
             ViewData["Vote"] = _surveyService.GetNumberVote(survey.Id);
 
-            var data = await _surveyService.GetResult(survey.Id);
+            var data = await _surveyService.GetResultAsync(survey.Id);
             if (data == null) { return View("Error"); }
 
             return View(data);

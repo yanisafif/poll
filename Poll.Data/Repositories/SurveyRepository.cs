@@ -55,7 +55,7 @@ namespace Poll.Data.Repositories
             }
         }
 
-        public IEnumerable<Survey> GetList(int currentUserId)
+        public Task<List<Survey>> GetListAsync(int currentUserId)
         {
             var queryable = this._dbContext.Surveys
             .Include(a => a.User)
@@ -63,11 +63,9 @@ namespace Poll.Data.Repositories
             .OrderBy(f => f.CreationDate); 
 
             if(currentUserId > 0)
-                return queryable.Where(f => !f.IsPrivate || f.User.Id == currentUserId);
+                return queryable.Where(f => !f.IsPrivate || f.User.Id == currentUserId).ToListAsync();
             else 
-                return queryable.Where(f => !f.IsPrivate);
-
-
+                return queryable.Where(f => !f.IsPrivate).ToListAsync();
         }
 
         public async Task AddSurveyAsync(Survey survey)
@@ -79,7 +77,7 @@ namespace Poll.Data.Repositories
             await this._dbContext.SaveChangesAsync();
         }
         
-        public async Task Update(Survey survey)
+        public async Task UpdateAsync(Survey survey)
         {
             if(survey is null)
                 throw new ArgumentNullException(nameof(survey)); 
@@ -111,11 +109,6 @@ namespace Poll.Data.Repositories
             {
                 return 0;
             }
-        }
-
-        public async Task<Survey> GetSurveyByGuidAsync(string guid)
-        {
-            return await _dbContext.Surveys.FirstOrDefaultAsync(f => f.GuidResult == guid);
         }
     }
 }
