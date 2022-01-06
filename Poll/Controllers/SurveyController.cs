@@ -26,9 +26,9 @@ namespace Poll.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            SurveyListViewModel model = await this._surveyService.GetList();
+            IEnumerable<SurveyViewModel> model = this._surveyService.GetList();
 
             return View(model);
         }
@@ -75,6 +75,15 @@ namespace Poll.Controllers
             LinkViewModel model = await this._surveyService.GetLinkViewModelAsync(guid);
             
             return View(model);
+        }
+        
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Invite(LinkViewModel model)
+        {
+            await this._surveyService.SendEmailInvitation(model);
+
+            return Redirect("/Survey");
         }
 
         [HttpGet]

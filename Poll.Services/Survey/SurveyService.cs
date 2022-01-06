@@ -1,11 +1,15 @@
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Poll.Services.ViewModel;
 using Poll.Data.Repositories;
 using Poll.Data.Model;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Poll.Services
 {
@@ -14,6 +18,7 @@ namespace Poll.Services
         private readonly ISurveyRepository _surveyRepo;
         private readonly IVoteRepository _voteRepo;
         private readonly IUsersService _userService;
+        private readonly IConfiguration _configuration;
 
         private readonly ILogger<SurveyService> _logger;
 
@@ -21,34 +26,30 @@ namespace Poll.Services
             ISurveyRepository surveyRepo, 
             IVoteRepository voteRepo,
             IUsersService usersService, 
-            ILogger<SurveyService> logger
+            ILogger<SurveyService> logger, 
+            IConfiguration configuration
         )
         {
             this._surveyRepo = surveyRepo;
             this._voteRepo = voteRepo;
             this._userService = usersService;
             this._logger = logger;
+            this._configuration = configuration;
         }
 
-        public async Task<SurveyListViewModel> GetList()
+        public IEnumerable<SurveyViewModel> GetList()
         {
-            List<Survey> surveys = await this._surveyRepo.GetListAsync();
-
             int userId = 0;
 
             if(this._userService.IsUserLoggedIn())
                 userId = this._userService.GetUserWithClaims().Id;
 
-            SurveyListViewModel model = new SurveyListViewModel()
-            {
-                ListOfSurvey = new List<SurveyViewModel>(), 
-                UserIsLoggedIn = userId != 0
-            };
+            List<Survey> surveys = this._surveyRepo.GetList(userId).ToList();
 
-            if(surveys is null || surveys.Count == 0)
-                return model;
+            if(surveys is null)
+                return new List<SurveyViewModel>();
 
-            model.ListOfSurvey = surveys.Select((a) => new SurveyViewModel()
+            IEnumerable<SurveyViewModel> model = surveys.Select((a) => new SurveyViewModel()
                 {
                     PollName = a.Name, 
                     Username = a.User.Pseudo, 
@@ -94,6 +95,7 @@ namespace Poll.Services
                 Choices = choices,
                 Name = surveyModel.Name,
                 IsActive = true,
+                IsPrivate = surveyModel.IsPrivate,
                 MultipleChoices = surveyModel.IsMultipleChoices, 
                 GuidDeactivate = Guid.NewGuid().ToString(),
                 GuidLink = Guid.NewGuid().ToString(),
@@ -125,7 +127,6 @@ namespace Poll.Services
 
             survey.IsActive = false; 
 
-            await this._surveyRepo.Update(survey);
             await this._surveyRepo.Update(survey);
         }
 
@@ -175,6 +176,7 @@ namespace Poll.Services
                 GuidDeactivate = survey.GuidDeactivate, 
                 GuidResult = survey.GuidResult, 
                 GuidVote = survey.GuidVote, 
+                GuidLink = survey.GuidLink,
                 Name = survey.Name
             };
         }
@@ -182,6 +184,47 @@ namespace Poll.Services
         public async Task<string> GetResultGuidFromVoteGuid(string voteGuid) 
         {
             return (await this._surveyRepo.GetAsync(voteGuid, GuidType.Vote)).GuidResult;
+        }
+
+        public async Task SendEmailInvitation(LinkViewModel model)
+        {
+            if(model is null || String.IsNullOrWhiteSpace(model.GuidLink))
+                throw new ArgumentNullException(nameof(model));
+
+            Survey survey = await this._surveyRepo.GetAsync(model.GuidLink, GuidType.Link);
+            if(survey is null)
+                throw new ArgumentException(nameof(model));
+
+            User user = this._userService.GetUserWithClaims();
+            if(user.Id != survey.User.Id)
+                throw new UserNotCorrespondingException();
+
+            string link = this._configuration["WebSiteName"];
+            StringBuilder sbBody = new StringBuilder();
+            sbBody.Append("<p>Bonjour,</p>");
+            sbBody.Append($"<p>Vous avez été invité(e) à voter au sondage <strong>{survey.Name}</strong> par <strong>{survey.User.Pseudo}.</p>");
+            sbBody.Append($"<p><a href=\"{link}/Survey/Vote/{survey.GuidVote}\">Cliquez ici pour voter</a>, ");
+            sbBody.Append($"Ou <a href=\"{link}/Survey/Result/{survey.GuidResult}\">ici pour voir les résultats</a></p>");
+            sbBody.Append($"<p>Ce message vous à été envoyé(e) par <a href=\"{link}\">{link}</a></p>");
+
+            IConfigurationSection emailSettings = this._configuration.GetSection("EmailSettings"); 
+            
+            SmtpClient smtpClient = new SmtpClient(emailSettings["Host"])
+            {
+                Port = Convert.ToInt32(emailSettings["Port"]),
+                Credentials = new NetworkCredential(emailSettings["Email"], emailSettings["Password"]),
+                EnableSsl = true,
+            };
+
+            MailMessage msg = new MailMessage()
+            {
+                IsBodyHtml = true, 
+                Body = sbBody.ToString(), 
+                From = new MailAddress(emailSettings["Email"]), 
+                Subject = $"Invitation au sondage {survey.Name}", 
+            };
+            msg.Bcc.Add(String.Join(',', model.Emails));
+            await smtpClient.SendMailAsync(msg);
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿@using Poll.Services.ViewModel;
-@model SurveyListViewModel;
+@model IEnumerable<SurveyViewModel>;
 
 @{
     ViewData["Title"] = "Sondage";
@@ -20,7 +20,7 @@
         <span class="col">Date de création</span>
         <span class="col">Actions</span>
     </div>
-    @foreach(SurveyViewModel survey in Model.ListOfSurvey)
+    @foreach(SurveyViewModel survey in Model)
     {
         <div class="card my-2">
             <div class="row py-2 text-center">

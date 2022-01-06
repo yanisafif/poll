@@ -42,6 +42,7 @@ namespace Poll.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     MultipleChoices = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsPrivate = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     GuidVote = table.Column<string>(type: "longtext", nullable: true)

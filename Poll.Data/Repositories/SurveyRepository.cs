@@ -55,13 +55,19 @@ namespace Poll.Data.Repositories
             }
         }
 
-        public Task<List<Survey>> GetListAsync()
+        public IEnumerable<Survey> GetList(int currentUserId)
         {
-            return this._dbContext.Surveys
+            var queryable = this._dbContext.Surveys
             .Include(a => a.User)
             .Include(a => a.Choices)
-            .OrderBy(f => f.CreationDate)
-            .ToListAsync();
+            .OrderBy(f => f.CreationDate); 
+
+            if(currentUserId > 0)
+                return queryable.Where(f => !f.IsPrivate || f.User.Id == currentUserId);
+            else 
+                return queryable.Where(f => !f.IsPrivate);
+
+
         }
 
         public async Task AddSurveyAsync(Survey survey)

@@ -9,7 +9,7 @@ namespace Poll.Services
 {
     public interface ISurveyService
     {
-        Task<SurveyListViewModel> GetList();
+        IEnumerable<SurveyViewModel> GetList();
 
         Task<string> AddSurveyAsync(AddSurveyViewModel surveyModel);
 
@@ -23,5 +23,7 @@ namespace Poll.Services
         int GetNumberVote(int idSurvey);
 
         Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid);
+
+        Task SendEmailInvitation(LinkViewModel model);
     }
 }
