@@ -27,7 +27,7 @@ namespace Poll.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            SurveyListViewModel model = this._surveyService.GetList();
+            IEnumerable<SurveyViewModel> model = this._surveyService.GetList();
 
             return View(model);
         }

@@ -30,7 +30,7 @@ namespace Poll.Services
             this._logger = logger;
         }
 
-        public SurveyListViewModel GetList()
+        public IEnumerable<SurveyViewModel> GetList()
         {
             int userId = 0;
 
@@ -39,16 +39,10 @@ namespace Poll.Services
 
             List<Survey> surveys = this._surveyRepo.GetList(userId).ToList();
 
-            SurveyListViewModel model = new SurveyListViewModel()
-            {
-                ListOfSurvey = new List<SurveyViewModel>(), 
-                UserIsLoggedIn = userId != 0
-            };
-
             if(surveys is null)
-                return model;
+                return new List<SurveyViewModel>();
 
-            model.ListOfSurvey = surveys.Select((a) => new SurveyViewModel()
+            IEnumerable<SurveyViewModel> model = surveys.Select((a) => new SurveyViewModel()
                 {
                     PollName = a.Name, 
                     Username = a.User.Pseudo, 
@@ -126,7 +120,6 @@ namespace Poll.Services
 
             survey.IsActive = false; 
 
-            await this._surveyRepo.Update(survey);
             await this._surveyRepo.Update(survey);
         }
 
