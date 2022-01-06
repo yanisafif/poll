@@ -10,6 +10,6 @@ namespace Poll.Services
     {
         Task<VoteViewModel> GetVoteViewModelAsync(string guid);
 
-        Task AddVote(string guid, VoteViewModel model);
+        Task AddVoteAsync(string guid, VoteViewModel model);
     }
 }

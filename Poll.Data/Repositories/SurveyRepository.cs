@@ -77,7 +77,7 @@ namespace Poll.Data.Repositories
             await this._dbContext.SaveChangesAsync();
         }
         
-        public async Task Update(Survey survey)
+        public async Task UpdateAsync(Survey survey)
         {
             if(survey is null)
                 throw new ArgumentNullException(nameof(survey)); 
@@ -109,11 +109,6 @@ namespace Poll.Data.Repositories
             {
                 return 0;
             }
-        }
-
-        public async Task<Survey> GetSurveyByGuidAsync(string guid)
-        {
-            return await _dbContext.Surveys.FirstOrDefaultAsync(f => f.GuidResult == guid);
         }
     }
 }

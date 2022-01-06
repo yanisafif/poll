@@ -127,7 +127,7 @@ namespace Poll.Services
 
             survey.IsActive = false; 
 
-            await this._surveyRepo.Update(survey);
+            await this._surveyRepo.UpdateAsync(survey);
         }
 
         public async Task<List<ResultViewModel>> GetResult(int idSurvey)
@@ -181,12 +181,12 @@ namespace Poll.Services
             };
         }
 
-        public async Task<string> GetResultGuidFromVoteGuid(string voteGuid) 
+        public async Task<string> GetResultGuidFromVoteGuidAsync(string voteGuid) 
         {
             return (await this._surveyRepo.GetAsync(voteGuid, GuidType.Vote)).GuidResult;
         }
 
-        public async Task SendEmailInvitation(LinkViewModel model)
+        public async Task SendEmailInvitationAsync(LinkViewModel model)
         {
             if(model is null || String.IsNullOrWhiteSpace(model.GuidLink))
                 throw new ArgumentNullException(nameof(model));

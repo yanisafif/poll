@@ -17,7 +17,7 @@ namespace Poll.Data.Repositories
 
         Task AddSurveyAsync(Survey survey);
 
-        Task Update(Survey survey);
+        Task UpdateAsync(Survey survey);
 
         bool DidUserVoteSurvey(int surveyId, int userId);
 

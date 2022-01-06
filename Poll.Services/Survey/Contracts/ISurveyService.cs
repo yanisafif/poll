@@ -19,11 +19,11 @@ namespace Poll.Services
 
         Task<Survey> GetSurveyAsync(string guidResult);
 
-        Task<string> GetResultGuidFromVoteGuid(string voteGuid);
+        Task<string> GetResultGuidFromVoteGuidAsync(string voteGuid);
         int GetNumberVote(int idSurvey);
 
         Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid);
 
-        Task SendEmailInvitation(LinkViewModel model);
+        Task SendEmailInvitationAsync(LinkViewModel model);
     }
 }
