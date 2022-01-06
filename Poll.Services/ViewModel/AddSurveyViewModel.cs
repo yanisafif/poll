@@ -16,6 +16,7 @@ namespace Poll.Services.ViewModel
         public string Name { get; set; }
 
         [DataType(DataType.Text)]
+        [StringLength(220)]
         public string Description { get; set; }
 
         public List<string> Choices { get; set; }
