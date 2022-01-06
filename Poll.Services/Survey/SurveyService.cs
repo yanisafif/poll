@@ -30,25 +30,19 @@ namespace Poll.Services
             this._logger = logger;
         }
 
-        public async Task<SurveyListViewModel> GetList()
+        public IEnumerable<SurveyViewModel> GetList()
         {
-            List<Survey> surveys = await this._surveyRepo.GetListAsync();
-
             int userId = 0;
 
             if(this._userService.IsUserLoggedIn())
                 userId = this._userService.GetUserWithClaims().Id;
 
-            SurveyListViewModel model = new SurveyListViewModel()
-            {
-                ListOfSurvey = new List<SurveyViewModel>(), 
-                UserIsLoggedIn = userId != 0
-            };
+            List<Survey> surveys = this._surveyRepo.GetList(userId).ToList();
 
-            if(surveys is null || surveys.Count == 0)
-                return model;
+            if(surveys is null)
+                return new List<SurveyViewModel>();
 
-            model.ListOfSurvey = surveys.Select((a) => new SurveyViewModel()
+            IEnumerable<SurveyViewModel> model = surveys.Select((a) => new SurveyViewModel()
                 {
                     PollName = a.Name, 
                     Username = a.User.Pseudo, 
@@ -94,6 +88,7 @@ namespace Poll.Services
                 Choices = choices,
                 Name = surveyModel.Name,
                 IsActive = true,
+                IsPrivate = surveyModel.IsPrivate,
                 MultipleChoices = surveyModel.IsMultipleChoices, 
                 GuidDeactivate = Guid.NewGuid().ToString(),
                 GuidLink = Guid.NewGuid().ToString(),
@@ -125,7 +120,6 @@ namespace Poll.Services
 
             survey.IsActive = false; 
 
-            await this._surveyRepo.Update(survey);
             await this._surveyRepo.Update(survey);
         }
 

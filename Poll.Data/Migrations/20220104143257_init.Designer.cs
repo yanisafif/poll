@@ -9,7 +9,7 @@ using Poll.Data;
 namespace Poll.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220103094541_init")]
+    [Migration("20220104143257_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,9 @@ namespace Poll.Data.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsPrivate")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("MultipleChoices")

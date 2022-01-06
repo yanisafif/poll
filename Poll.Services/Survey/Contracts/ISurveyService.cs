@@ -9,7 +9,7 @@ namespace Poll.Services
 {
     public interface ISurveyService
     {
-        Task<SurveyListViewModel> GetList();
+        IEnumerable<SurveyViewModel> GetList();
 
         Task<string> AddSurveyAsync(AddSurveyViewModel surveyModel);
 

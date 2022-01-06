@@ -25,9 +25,9 @@ namespace Poll.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            SurveyListViewModel model = await this._surveyService.GetList();
+            IEnumerable<SurveyViewModel> model = this._surveyService.GetList();
 
             return View(model);
         }

@@ -7,12 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Poll.Services.ViewModel
 {
-    public class SurveyListViewModel
-    {
-        public bool UserIsLoggedIn { get; set; }
-        public IEnumerable<SurveyViewModel> ListOfSurvey { get; set; }
-    }
-
     public class SurveyViewModel
     {
         public string PollName { get; set; }
