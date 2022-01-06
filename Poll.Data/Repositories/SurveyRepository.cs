@@ -90,24 +90,18 @@ namespace Poll.Data.Repositories
         
         public bool DidUserVoteSurvey(int surveyId, int userId)
         {
-            return Convert.ToBoolean(this._dbContext.Votes.FromSqlRaw(
-                "SELECT DISTINCT * FROM Votes  WHERE ChoiceId IN (SELECT Choices.Id FROM Surveys INNER JOIN Choices ON Choices.SurveyId = Surveys.Id WHERE Surveys.Id = {0}) AND UserId = {1}", 
-                surveyId, 
-                userId
-            ).Count());
+            return this._dbContext.Votes.Any(e => e.Choice.Survey.Id == surveyId && e.User.Id == userId);
+
         }
 
-        public Task<List<Choice>> GetChoicesAsync(int surveyId)
+        public async Task<List<Choice>> GetChoicesAsync(int surveyId)
         {
-            return  this._dbContext.Choices.FromSqlRaw(
-                 "SELECT * FROM Choices WHERE SurveyId = {0}", surveyId).ToListAsync();
+            return await this._dbContext.Choices.Where(e => e.Survey.Id == surveyId).ToListAsync();
         }
 
-        public int GetVotesByChoices(int choiceId)
+        public async Task<int> GetVotesByChoicesAsync(int choiceId)
         {
-            var vote = this._dbContext.Votes.FromSqlRaw(
-                 "SELECT Id FROM Votes WHERE choiceId = {0}",
-                 choiceId).Count();
+            var vote = await _dbContext.Votes.Where(e => e.Choice.Id == choiceId).Select(e => e.Id).CountAsync();
 
             if (vote > 0)
             {
@@ -117,6 +111,11 @@ namespace Poll.Data.Repositories
             {
                 return 0;
             }
+        }
+
+        public async Task<Survey> GetSurveyByGuidAsync(string guid)
+        {
+            return await _dbContext.Surveys.FirstOrDefaultAsync(f => f.GuidResult == guid);
         }
     }
 }

@@ -36,25 +36,32 @@
                 }
                 <span class="col">@survey.CreationDate</span>
                 <div class="col">
-                    @if(survey.IsActive)
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        <div class="pointer py-1"> 
-                            @if(survey.UserDidVote)
-                            {
-                                <a class="link" href="/Survey/Vote/@survey.GuidVote">Modifier mon vote</a>
-                            }
-                            else 
-                            {
-                                <a class="link" href="/Survey/Vote/@survey.GuidVote">Voter</a>
-                            }
-                        </div>
-                        if(survey.IsCurrentUser)
+                        @if (survey.IsActive)
                         {
-                            <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.GuidDeactivate">Désactiver le sondage</a> </div>
+                            <div class="pointer py-1"> 
+                                @if (survey.UserDidVote)
+                                {
+                                    <a class="link" href="/Survey/Vote/@survey.GuidVote">Modifier mon vote</a>
+                                }
+                                else
+                                {
+                                    <a class="link" href="/Survey/Vote/@survey.GuidVote">Voter</a>
+                                }
+                            </div>
+                            if (survey.IsCurrentUser)
+                            {
+                                <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.GuidDeactivate">Désactiver le sondage</a> </div>
+                            }
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
                         }
-                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
+                        else
+                        {
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
+                        }
                     }
-                    else 
+                    else
                     {
                         <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
                     }
