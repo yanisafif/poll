@@ -37,14 +37,14 @@ namespace Poll.Services
             this._configuration = configuration;
         }
 
-        public IEnumerable<SurveyViewModel> GetList()
+        public async Task<IEnumerable<SurveyViewModel>> GetListAsync()
         {
             int userId = 0;
 
             if(this._userService.IsUserLoggedIn())
                 userId = this._userService.GetUserWithClaims().Id;
 
-            List<Survey> surveys = this._surveyRepo.GetList(userId).ToList();
+            List<Survey> surveys = await this._surveyRepo.GetListAsync(userId);
 
             if(surveys is null)
                 return new List<SurveyViewModel>();

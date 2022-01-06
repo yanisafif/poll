@@ -9,7 +9,7 @@ namespace Poll.Data.Repositories
 {
     public interface ISurveyRepository
     {
-        IEnumerable<Survey> GetList(int currentUserId);
+        Task<List<Survey>> GetListAsync(int currentUserId);
 
         Task<Survey> GetAsync(int id);
 
