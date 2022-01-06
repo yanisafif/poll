@@ -23,7 +23,7 @@ namespace Poll.Data.Repositories
 
         Task<List<Choice>> GetChoicesAsync(int surveyId);
 
-        int GetVotesByChoices(int choiceId);
+        Task<int> GetVotesByChoicesAsync(int choiceId);
 
     }
 }

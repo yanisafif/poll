@@ -91,17 +91,14 @@ namespace Poll.Data.Repositories
             ).Count());
         }
 
-        public Task<List<Choice>> GetChoicesAsync(int surveyId)
+        public async Task<List<Choice>> GetChoicesAsync(int surveyId)
         {
-            return  this._dbContext.Choices.FromSqlRaw(
-                 "SELECT * FROM Choices WHERE SurveyId = {0}", surveyId).ToListAsync();
+            return await this._dbContext.Choices.Where(e => e.Survey.Id == surveyId).ToListAsync();
         }
 
-        public int GetVotesByChoices(int choiceId)
+        public async Task<int> GetVotesByChoicesAsync(int choiceId)
         {
-            var vote = this._dbContext.Votes.FromSqlRaw(
-                 "SELECT Id FROM Votes WHERE choiceId = {0}",
-                 choiceId).Count();
+            var vote = await _dbContext.Votes.Where(e => e.Choice.Id == choiceId).Select(e => e.Id).CountAsync();
 
             if (vote > 0)
             {

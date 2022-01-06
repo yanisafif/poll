@@ -144,7 +144,7 @@ namespace Poll.Services
                 ResultViewModel objcvm = new ResultViewModel();
                 objcvm.IdChoice = choice.Id;
                 objcvm.NameChoice = choice.Name;
-                objcvm.vote = _surveyRepo.GetVotesByChoices(choice.Id);
+                objcvm.vote = await _surveyRepo.GetVotesByChoicesAsync(choice.Id);
 
                 choiceModel.Add(objcvm);
 
