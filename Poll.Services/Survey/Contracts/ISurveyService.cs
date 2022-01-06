@@ -20,5 +20,7 @@ namespace Poll.Services
         Task<string> GetResultGuidFromVoteGuid(string voteGuid);
 
         Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid);
+
+        Task SendEmailInvitation(LinkViewModel model);
     }
 }
