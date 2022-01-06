@@ -23,5 +23,7 @@ namespace Poll.Services
         int GetNumberVote(int idSurvey);
 
         Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid);
+
+        Task SendEmailInvitation(LinkViewModel model);
     }
 }

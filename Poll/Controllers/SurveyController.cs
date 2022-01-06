@@ -76,6 +76,15 @@ namespace Poll.Controllers
             
             return View(model);
         }
+        
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Invite(LinkViewModel model)
+        {
+            await this._surveyService.SendEmailInvitation(model);
+
+            return Redirect("/Survey");
+        }
 
         [HttpGet]
         [Authorize]
