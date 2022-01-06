@@ -140,7 +140,7 @@ namespace Poll.Controllers
             ViewData["Description"] = survey.Description;
             ViewData["Vote"] = _surveyService.GetNumberVote(survey.Id);
 
-            var data = await _surveyService.GetResult(survey.Id);
+            var data = await _surveyService.GetResultAsync(survey.Id);
             if (data == null) { return View("Error"); }
 
             return View(data);
