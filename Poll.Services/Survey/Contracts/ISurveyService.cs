@@ -15,7 +15,7 @@ namespace Poll.Services
 
         Task DeactivateAsync(string guid);
 
-        Task<List<ResultViewModel>> GetResult(int idSurvey);
+        Task<List<ResultViewModel>> GetResultAsync(int idSurvey);
 
         Task<Survey> GetSurveyAsync(string guidResult);
 

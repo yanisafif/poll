@@ -130,7 +130,7 @@ namespace Poll.Services
             await this._surveyRepo.UpdateAsync(survey);
         }
 
-        public async Task<List<ResultViewModel>> GetResult(int idSurvey)
+        public async Task<List<ResultViewModel>> GetResultAsync(int idSurvey)
         {
             var choices = await _surveyRepo.GetChoicesAsync(idSurvey);
 
