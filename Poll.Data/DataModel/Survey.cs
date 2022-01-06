@@ -11,9 +11,12 @@ namespace Poll.Data.Model
 
         [StringLength(50)]
         public string Name { get; set; }
+
+        [StringLength(220)]
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public bool MultipleChoices { get; set; }
+        public bool IsPrivate { get; set; }
         public List<Choice> Choices { get; set; }
         public User User { get; set; }
         public DateTime CreationDate { get; set; }

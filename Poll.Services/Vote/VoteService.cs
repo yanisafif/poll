@@ -68,7 +68,7 @@ namespace Poll.Services
         }
 
 
-        public async Task AddVote(string guidVote, VoteViewModel model)
+        public async Task AddVoteAsync(string guidVote, VoteViewModel model)
         {
             if(String.IsNullOrWhiteSpace(guidVote))
                 throw new ArgumentNullException(nameof(guidVote));
@@ -113,7 +113,7 @@ namespace Poll.Services
             Choice choice = survey.Choices.FirstOrDefault(f => f.Id == choiceId);
 
             if(choice is null) 
-                throw new Exception("Ce sondage ne conteint pas ce vote la");
+                throw new Exception("Ce sondage ne contient pas ce vote la");
 
             return new Vote()
             {

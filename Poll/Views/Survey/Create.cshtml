@@ -25,16 +25,21 @@
                 <input asp-for="IsMultipleChoices" class="form-control" />
                 <span asp-validation-for="IsMultipleChoices" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="IsPrivate" class="control-label"></label>
+                <input asp-for="IsPrivate" class="form-control" />
+                <span asp-validation-for="IsPrivate" class="text-danger"></span>
+            </div>
             <span asp-validation-for="Choices" class="text-danger"></span>
             <div id="choice-container">
                 <div class="form-group" id="choice1">
                     <label class="control-label"> Choix 1</label>
-                    <input asp-for="Choices[0]" class="form-control" />
+                    <input asp-for="Choices[0]" class="form-control" maxlength="50" />
                 </div>
                 <div class="form-group" id="choice2">
                     <label class="control-label"> Choix 2</label>
                     <input asp-for="Choices[1]" class="form-control" />
-                    <span asp-validation-for="Choices[1]" class="text-danger"></span>
+                    <span asp-validation-for="Choices[1]" class="text-danger" maxlength="50"></span>
                 </div>
             </div>
             <div class="mb-4 pointer">

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Poll.Services;
 using Poll.Services.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Poll.Data.Model;
 
 namespace Poll.Controllers
 {
@@ -27,7 +28,7 @@ namespace Poll.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            SurveyListViewModel model = await this._surveyService.GetList();
+            IEnumerable<SurveyViewModel> model = await this._surveyService.GetListAsync();
 
             return View(model);
         }
@@ -75,6 +76,15 @@ namespace Poll.Controllers
             
             return View(model);
         }
+        
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Invite(LinkViewModel model)
+        {
+            await this._surveyService.SendEmailInvitationAsync(model);
+
+            return Redirect("/Survey");
+        }
 
         [HttpGet]
         [Authorize]
@@ -88,7 +98,7 @@ namespace Poll.Controllers
             }
             catch(SurveyDeactivatedException)
             {
-                string resultGuid = await this._surveyService.GetResultGuidFromVoteGuid(guid);
+                string resultGuid = await this._surveyService.GetResultGuidFromVoteGuidAsync(guid);
                 return Redirect($"/Survey/Result/{resultGuid}");
             }
             catch(Exception e) when (
@@ -108,7 +118,7 @@ namespace Poll.Controllers
         [Authorize]
         public async Task<IActionResult> Vote([FromRoute] string guid, VoteViewModel a)
         {
-            await this._voteService.AddVote(guid, a);
+            await this._voteService.AddVoteAsync(guid, a);
 
             return Redirect("/Survey");
         }
@@ -123,9 +133,16 @@ namespace Poll.Controllers
         [HttpGet]
         public async Task<IActionResult> Result([FromRoute]string guid)
         { 
+            Survey survey = await _surveyService.GetSurveyAsync(guid);
+            if (survey == null) { return Redirect("/Survey"); }
 
-            var data = await _surveyService.GetResult(guid);
+            ViewData["Name"] = survey.Name ;
+            ViewData["Description"] = survey.Description;
+            ViewData["Vote"] = _surveyService.GetNumberVote(survey.Id);
+
+            var data = await _surveyService.GetResultAsync(survey.Id);
             if (data == null) { return View("Error"); }
+
             return View(data);
         }
     }

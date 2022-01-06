@@ -55,13 +55,17 @@ namespace Poll.Data.Repositories
             }
         }
 
-        public Task<List<Survey>> GetListAsync()
+        public Task<List<Survey>> GetListAsync(int currentUserId)
         {
-            return this._dbContext.Surveys
+            var queryable = this._dbContext.Surveys
             .Include(a => a.User)
             .Include(a => a.Choices)
-            .OrderBy(f => f.CreationDate)
-            .ToListAsync();
+            .OrderBy(f => f.CreationDate); 
+
+            if(currentUserId > 0)
+                return queryable.Where(f => !f.IsPrivate || f.User.Id == currentUserId).ToListAsync();
+            else 
+                return queryable.Where(f => !f.IsPrivate).ToListAsync();
         }
 
         public async Task AddSurveyAsync(Survey survey)
@@ -73,7 +77,7 @@ namespace Poll.Data.Repositories
             await this._dbContext.SaveChangesAsync();
         }
         
-        public async Task Update(Survey survey)
+        public async Task UpdateAsync(Survey survey)
         {
             if(survey is null)
                 throw new ArgumentNullException(nameof(survey)); 
@@ -84,24 +88,18 @@ namespace Poll.Data.Repositories
         
         public bool DidUserVoteSurvey(int surveyId, int userId)
         {
-            return Convert.ToBoolean(this._dbContext.Votes.FromSqlRaw(
-                "SELECT DISTINCT * FROM Votes  WHERE ChoiceId IN (SELECT Choices.Id FROM Surveys INNER JOIN Choices ON Choices.SurveyId = Surveys.Id WHERE Surveys.Id = {0}) AND UserId = {1}", 
-                surveyId, 
-                userId
-            ).Count());
+            return this._dbContext.Votes.Any(e => e.Choice.Survey.Id == surveyId && e.User.Id == userId);
+
         }
 
-        public Task<List<Choice>> GetChoicesAsync(int surveyId)
+        public async Task<List<Choice>> GetChoicesAsync(int surveyId)
         {
-            return  this._dbContext.Choices.FromSqlRaw(
-                 "SELECT * FROM Choices WHERE SurveyId = {0}", surveyId).ToListAsync();
+            return await this._dbContext.Choices.Where(e => e.Survey.Id == surveyId).ToListAsync();
         }
 
-        public int GetVotesByChoices(int choiceId)
+        public async Task<int> GetVotesByChoicesAsync(int choiceId)
         {
-            var vote = this._dbContext.Votes.FromSqlRaw(
-                 "SELECT Id FROM Votes WHERE choiceId = {0}",
-                 choiceId).Count();
+            var vote = await _dbContext.Votes.Where(e => e.Choice.Id == choiceId).Select(e => e.Id).CountAsync();
 
             if (vote > 0)
             {
