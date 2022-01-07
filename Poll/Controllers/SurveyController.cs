@@ -90,7 +90,6 @@ namespace Poll.Controllers
         [Authorize]
         public async Task<IActionResult> Vote([FromRoute] string guid)
         {
-            
             VoteViewModel model;
             try
             {
