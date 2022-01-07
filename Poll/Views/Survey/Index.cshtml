@@ -24,7 +24,15 @@
     {
         <div class="card my-2">
             <div class="row py-2 text-center">
-                <h2 class="col">@survey.PollName</h2>
+                @if(survey.IsCurrentUser)
+                {
+                    <div class="user-indicator bg-blue"></div>
+                }
+                else 
+                {
+                    <div class="user-indicator"></div>
+                }
+                <span class="col pl-0 font-weight-bold">@survey.PollName</span>
                 <span class="col">@survey.Username</span>
                 @if(survey.IsActive)
                 {
@@ -67,13 +75,6 @@
                     }
                 </div>
             </div>
-
-            @if(!String.IsNullOrWhiteSpace(survey.Description))
-            {
-                <p class="px-5">
-                    @survey.Description
-                </p>
-            }
         </div>
     }
 </div>
