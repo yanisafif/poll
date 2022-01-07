@@ -41,6 +41,10 @@ namespace Poll.Services
                     };
                     // On envoit la requête à la BDD
                     await _userRepo.AddUserAsync(users);
+                    
+                    var login = new LoginViewModel() { Email = model.Email, Password = model.Password };
+                    await this.AuthenticatedAsync(login);
+
                     return true;
                 }
             }
