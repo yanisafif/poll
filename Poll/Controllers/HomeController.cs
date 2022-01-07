@@ -72,7 +72,7 @@ namespace Poll.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             
-            if (await _usersService.Authenticated(model))
+            if (await _usersService.AuthenticatedAsync(model))
             {
                 return Redirect("index");
             }else
@@ -84,11 +84,8 @@ namespace Poll.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult Privacy()
         {
-            var userConnected = _usersService.GetUserWithClaims();
-            ViewData["Claims"] = userConnected.Email;
             return View();
         }
 
@@ -102,7 +99,7 @@ namespace Poll.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            await _usersService.Logout();
+            await _usersService.LogoutAsync();
             return LocalRedirect("/home/index");
         }
     }

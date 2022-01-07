@@ -25,10 +25,7 @@ namespace Poll.Data.Repositories
         }
         public int GetNumberVoter(int surveyId)
         {
-            return this._dbContext.Votes.FromSqlRaw(
-                "SELECT DISTINCT UserId FROM Votes WHERE ChoiceId IN (SELECT Choices.Id FROM Surveys INNER JOIN Choices ON Choices.SurveyId = Surveys.Id WHERE Surveys.Id = {0})",
-                surveyId
-            ).Count();
+            return this._dbContext.Votes.Where(e => e.Choice.Survey.Id == surveyId).Select(e => e.User.Id).Distinct().Count();
         }
         public async Task AddVoteAsync(Vote vote)
         {

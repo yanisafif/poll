@@ -8,9 +8,9 @@ namespace Poll.Services
     {
         Task<bool> RegisterAsync(RegisterViewModel model);
 
-        Task<bool> Authenticated(LoginViewModel model);
+        Task<bool> AuthenticatedAsync(LoginViewModel model);
         User GetUserWithClaims();
-        Task Logout();
+        Task LogoutAsync();
         bool IsUserLoggedIn();
     }
 }

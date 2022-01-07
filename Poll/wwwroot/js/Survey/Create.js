@@ -7,7 +7,7 @@ function addChoice() {
     
     element.innerHTML = 
         '<label class="control-label"> Choix '+ (i+1) +'</label>' +
-        '<input type="text" class="form-control" id="Choices_'+ i +'_" name="Choices['+ i +']"/>' +
+    '<input type="text" class="form-control" id="Choices_' + i + '_" name="Choices[' + i +']" maxlength="50"/>' +
         '<span class="text-danger field-validation-valid" data-valmsg-for="Choices['+ i +']" data-valmsg-replace="true"></span>';
    
 

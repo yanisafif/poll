@@ -84,3 +84,14 @@ body {
   margin-block-end: 0px !important;
   margin-bottom: 0px !important;
 }
+
+.user-indicator {
+  min-height: 100%;
+  width: 3px;
+  margin-left: 15px;
+  border-radius: 25px;
+}
+
+.bg-blue {
+  background: #007bff;
+}

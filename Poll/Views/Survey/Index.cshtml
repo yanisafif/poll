@@ -1,5 +1,5 @@
 ﻿@using Poll.Services.ViewModel;
-@model SurveyListViewModel;
+@model IEnumerable<SurveyViewModel>;
 
 @{
     ViewData["Title"] = "Sondage";
@@ -7,9 +7,9 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<div>
+<div class="container d-flex justify-content-end">
 
-<button class="btn btn-primary" onclick="window.location.href = '/Survey/Create'">Créer un sondage</button>
+<button class="btn btn-primary " onclick="window.location.href = '/Survey/Create'">Créer un sondage</button>
 </div>
 
 <div class="container mt-5">
@@ -20,11 +20,19 @@
         <span class="col">Date de création</span>
         <span class="col">Actions</span>
     </div>
-    @foreach(SurveyViewModel survey in Model.ListOfSurvey)
+    @foreach(SurveyViewModel survey in Model)
     {
         <div class="card my-2">
             <div class="row py-2 text-center">
-                <h2 class="col">@survey.PollName</h2>
+                @if(survey.IsCurrentUser)
+                {
+                    <div class="user-indicator bg-blue"></div>
+                }
+                else 
+                {
+                    <div class="user-indicator"></div>
+                }
+                <span class="col pl-0 font-weight-bold">@survey.PollName</span>
                 <span class="col">@survey.Username</span>
                 @if(survey.IsActive)
                 {
@@ -36,37 +44,37 @@
                 }
                 <span class="col">@survey.CreationDate</span>
                 <div class="col">
-                    @if(survey.IsActive)
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        <div class="pointer py-1"> 
-                            @if(survey.UserDidVote)
-                            {
-                                <a class="link" href="/Survey/Vote/@survey.GuidVote">Modifier mon vote</a>
-                            }
-                            else 
-                            {
-                                <a class="link" href="/Survey/Vote/@survey.GuidVote">Voter</a>
-                            }
-                        </div>
-                        if(survey.IsCurrentUser)
+                        @if (survey.IsActive)
                         {
-                            <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.GuidDeactivate">Désactiver le sondage</a> </div>
+                            <div class="pointer py-1"> 
+                                @if (survey.UserDidVote)
+                                {
+                                    <a class="link" href="/Survey/Vote/@survey.GuidVote">Modifier mon vote</a>
+                                }
+                                else
+                                {
+                                    <a class="link" href="/Survey/Vote/@survey.GuidVote">Voter</a>
+                                }
+                            </div>
+                            if (survey.IsCurrentUser)
+                            {
+                                <div class="pointer py-1"> <a class="link" href="/Survey/Deactivate/@survey.GuidDeactivate">Désactiver le sondage</a> </div>
+                            }
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
                         }
-                        <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
+                        else
+                        {
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
+                        }
                     }
-                    else 
+                    else
                     {
                         <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
                     }
                 </div>
             </div>
-
-            @if(!String.IsNullOrWhiteSpace(survey.Description))
-            {
-                <p class="px-5">
-                    @survey.Description
-                </p>
-            }
         </div>
     }
 </div>

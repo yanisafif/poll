@@ -41,13 +41,17 @@ namespace Poll.Services
                     };
                     // On envoit la requête à la BDD
                     await _userRepo.AddUserAsync(users);
+                    
+                    var login = new LoginViewModel() { Email = model.Email, Password = model.Password };
+                    await this.AuthenticatedAsync(login);
+
                     return true;
                 }
             }
             return false;
         }
 
-        public async Task<bool> Authenticated(LoginViewModel model)
+        public async Task<bool> AuthenticatedAsync(LoginViewModel model)
         {
             // On vérifie si le model n'est pas vide
             if(model.Email != null && model.Password != null)
@@ -100,7 +104,7 @@ namespace Poll.Services
             return _httpContext.User.Identity.IsAuthenticated;
         }
 
-        public async Task Logout()
+        public async Task LogoutAsync()
         {
             await _httpContext.SignOutAsync();
         }

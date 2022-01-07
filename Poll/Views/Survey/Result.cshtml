@@ -11,6 +11,12 @@
 <p>
     <a asp-action="Index">Retour à la liste des sondages</a>
 </p>
+<h2>@ViewData["Name"]</h2>
+
+<p>Nombre de votant : @ViewData["Vote"]</p>    
+<hr />
+<p>@ViewData["Description"]</p>
+
 <script>
     let lab = [];
     let dat = [];
@@ -32,8 +38,8 @@
     labels: labels,
     datasets: [{
       label: 'Résultat du sondage',
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgb(0, 123, 255)',
+      borderColor: 'rgb(20, 123, 255)',
       data: dat,
     }]
   };
