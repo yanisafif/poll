@@ -208,23 +208,37 @@ namespace Poll.Services
             sbBody.Append($"<p>Ce message vous a été envoyé(e) par <a href=\"{link}\">{link}</a></p>");
 
             IConfigurationSection emailSettings = this._configuration.GetSection("EmailSettings"); 
-            
-            SmtpClient smtpClient = new SmtpClient(emailSettings["Host"])
-            {
-                Port = Convert.ToInt32(emailSettings["Port"]),
-                Credentials = new NetworkCredential(emailSettings["Email"], emailSettings["Password"]),
-                EnableSsl = true,
-            };
+            string emailFrom = emailSettings["Email"];
 
-            MailMessage msg = new MailMessage()
+            using(
+                SmtpClient smtpClient = new SmtpClient(emailSettings["Host"])
+                {
+                    Port = Convert.ToInt32(emailSettings["Port"]),
+                    Credentials = new NetworkCredential(emailFrom, emailSettings["Password"]),
+                    EnableSsl = true
+                }
+            ) 
             {
-                IsBodyHtml = true, 
-                Body = sbBody.ToString(), 
-                From = new MailAddress(emailSettings["Email"]), 
-                Subject = $"Invitation au sondage {survey.Name}", 
-            };
-            msg.Bcc.Add(String.Join(',', model.Emails));
-            await smtpClient.SendMailAsync(msg);
+                MailMessage msg = new MailMessage()
+                {
+                    IsBodyHtml = true, 
+                    Body = sbBody.ToString(), 
+                    From = new MailAddress(emailFrom), 
+                    Subject = $"Invitation au sondage {survey.Name}", 
+                };
+                foreach (string item in model.Emails)
+                {
+                    if(String.IsNullOrWhiteSpace(item))
+                        continue;
+                    try 
+                    {
+                        msg.Bcc.Add(new MailAddress(item));
+                    }
+                    catch { }
+                }
+                if(msg.Bcc.Count > 0)
+                    await smtpClient.SendMailAsync(msg);
+            }
         }
     }
 
