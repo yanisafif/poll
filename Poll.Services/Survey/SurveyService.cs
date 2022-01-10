@@ -204,8 +204,8 @@ namespace Poll.Services
             sbBody.Append("<p>Bonjour,</p>");
             sbBody.Append($"<p>Vous avez été invité(e) à voter au sondage <strong>{survey.Name}</strong> par <strong>{survey.User.Pseudo}</strong>.</p>");
             sbBody.Append($"<p><a href=\"{link}/Survey/Vote/{survey.GuidVote}\">Cliquez ici pour voter</a>, ");
-            sbBody.Append($"Ou <a href=\"{link}/Survey/Result/{survey.GuidResult}\">ici pour voir les résultats</a></p>");
-            sbBody.Append($"<p>Ce message vous à été envoyé(e) par <a href=\"{link}\">{link}</a></p>");
+            sbBody.Append($"ou <a href=\"{link}/Survey/Result/{survey.GuidResult}\">ici pour voir les résultats</a></p>");
+            sbBody.Append($"<p>Ce message vous a été envoyé(e) par <a href=\"{link}\">{link}</a></p>");
 
             IConfigurationSection emailSettings = this._configuration.GetSection("EmailSettings"); 
             
