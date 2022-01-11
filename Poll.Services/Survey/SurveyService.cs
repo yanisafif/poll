@@ -54,9 +54,10 @@ namespace Poll.Services
                     PollName = a.Name, 
                     Username = a.User.Pseudo, 
                     CreationDate = a.CreationDate.ToShortDateString(), 
-                    IsActive =  a.IsActive, 
                     Description = a.Description ?? "", 
+                    IsActive = this.IsSurveyActive(a), 
                     GuidDeactivate = a.GuidDeactivate,
+                    DeactivateDate = this.GetDeactivateDate(a),
                     GuidResult = a.GuidResult,
                     GuidVote = a.GuidVote,
                     IsCurrentUser = a.User.Id == userId, 
@@ -88,15 +89,17 @@ namespace Poll.Services
             if(choices.Count < 2)
                 throw new NotEnoughChoicesException();
 
+            this._logger.LogInformation("DeactivateDate: " + (surveyModel.DeactivateDate is null));
+
             Survey survey = new Survey()
             {
                 CreationDate = DateTime.Now,
                 Description = surveyModel.Description,
                 Choices = choices,
                 Name = surveyModel.Name,
-                IsActive = true,
                 IsPrivate = surveyModel.IsPrivate,
                 MultipleChoices = surveyModel.IsMultipleChoices, 
+                DeactivateDate = surveyModel.DeactivateDate,
                 GuidDeactivate = Guid.NewGuid().ToString(),
                 GuidLink = Guid.NewGuid().ToString(),
                 GuidResult = Guid.NewGuid().ToString(),
@@ -125,7 +128,7 @@ namespace Poll.Services
             if(survey.User.Id != user.Id)
                 throw new UserNotCorrespondingException();
 
-            survey.IsActive = false; 
+            survey.DeactivateDate = DateTime.Now; 
 
             await this._surveyRepo.UpdateAsync(survey);
         }
@@ -240,7 +243,23 @@ namespace Poll.Services
                     await smtpClient.SendMailAsync(msg);
             }
         }
+        public bool IsSurveyActive(Survey survey)
+        {
+            if(survey.DeactivateDate is null || !survey.DeactivateDate.HasValue)
+                return true;
+
+            return survey.DeactivateDate.Value.Subtract(DateTime.Now).TotalMilliseconds > 0;
+        }
+
+        public string GetDeactivateDate(Survey survey)
+        {
+            if(survey.DeactivateDate is null || !survey.DeactivateDate.HasValue)
+                return ""; 
+            return survey.DeactivateDate.Value.ToShortDateString();
+        }
+
     }
+
 
     [System.Serializable]
     public class UserNotCorrespondingException : System.Exception
