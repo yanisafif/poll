@@ -27,5 +27,9 @@ namespace Poll.Services.ViewModel
         [Display(Name = "Rendre le sondage privé")]
         public bool IsPrivate { get; set; }
 
+        [Display(Name = "Date d'expiration du sondage (optionnel)")]
+        [DataType(DataType.DateTime)]
+        public Nullable<DateTime> DeactivateDate { get; set; }
+
     }
 }
