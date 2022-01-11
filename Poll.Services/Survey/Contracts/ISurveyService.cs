@@ -27,5 +27,7 @@ namespace Poll.Services
         Task SendEmailInvitationAsync(LinkViewModel model);
 
         bool IsSurveyActive(Survey survey);
+
+        string GetDeactivateDate(Survey survey);
     }
 }

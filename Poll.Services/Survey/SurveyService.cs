@@ -57,7 +57,7 @@ namespace Poll.Services
                     Description = a.Description ?? "", 
                     IsActive = this.IsSurveyActive(a), 
                     GuidDeactivate = a.GuidDeactivate,
-                    DeactivateDate = a.DeactivateDate.HasValue ? a.DeactivateDate.Value.ToShortDateString() : "",
+                    DeactivateDate = this.GetDeactivateDate(a),
                     GuidResult = a.GuidResult,
                     GuidVote = a.GuidVote,
                     IsCurrentUser = a.User.Id == userId, 
@@ -246,9 +246,16 @@ namespace Poll.Services
         public bool IsSurveyActive(Survey survey)
         {
             if(survey.DeactivateDate is null || !survey.DeactivateDate.HasValue)
-                return  true;
+                return true;
 
             return survey.DeactivateDate.Value.Subtract(DateTime.Now).TotalMilliseconds > 0;
+        }
+
+        public string GetDeactivateDate(Survey survey)
+        {
+            if(survey.DeactivateDate is null || !survey.DeactivateDate.HasValue)
+                return ""; 
+            return survey.DeactivateDate.Value.ToShortDateString();
         }
 
     }

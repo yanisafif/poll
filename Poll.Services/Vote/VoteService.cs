@@ -55,7 +55,7 @@ namespace Poll.Services
                     Id = m.Id,
                     Name = m.Name, 
                     Selected = isSelected, 
-                    SelectedBefore = isSelected
+                    SelectedBefore = isSelected,
                 };
             });
 
@@ -66,7 +66,8 @@ namespace Poll.Services
                 PollName = survey.Name, 
                 IsMultipleChoice =  survey.MultipleChoices, 
                 NumberOfVoter = this._voteRepo.GetNumberVoter(survey.Id), 
-                Description = survey.Description
+                Description = survey.Description, 
+                DeactivateDate = this._surveyService.GetDeactivateDate(survey)
             };
         }
 
