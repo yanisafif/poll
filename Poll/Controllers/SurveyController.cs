@@ -122,6 +122,7 @@ namespace Poll.Controllers
             return Redirect("/Survey");
         }
 
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Deactivate([FromRoute] string guid)
         {
@@ -129,8 +130,18 @@ namespace Poll.Controllers
 
             return Redirect("/Survey");
         }
+        
         [HttpGet]
-        public async Task<IActionResult> Result([FromRoute]string guid)
+        [Authorize]
+        public async Task<IActionResult> Delete([FromRoute] string guid)
+        {
+            await this._surveyService.DeleteAsync(guid);
+
+            return Redirect("/Survey");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Result([FromRoute] string guid)
         { 
             Survey survey = await _surveyService.GetSurveyAsync(guid);
             if (survey == null) { return Redirect("/Survey"); }

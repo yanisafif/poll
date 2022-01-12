@@ -25,5 +25,6 @@ namespace Poll.Data.Repositories
 
         Task<int> GetVotesByChoicesAsync(int choiceId);
 
+        Task DeleteAsync(Survey survey);
     }
 }
