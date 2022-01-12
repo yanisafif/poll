@@ -30,8 +30,7 @@ namespace Poll.Services
                 if(_userRepo.AnyEmailOrPseudo(model.Email , model.Pseudo))
                 {
                     // Cryptage du mot de passe à intégrer en bdd
-                    var password = model.Password;
-                    var passwordSHA256 = EasyEncryption.SHA.ComputeSHA256Hash(password);
+                    var passwordSHA256 = BCrypt.Net.BCrypt.HashPassword(model.Password);
                     // On rajoute dans l'entité User les informations issus du model
                     var users = new User()
                     {
@@ -61,8 +60,7 @@ namespace Poll.Services
                 if (user != null)
                 {
                     // On crypte le password pour vérifier que c'est bien celui en bdd
-                    var passwordTocheck = EasyEncryption.SHA.ComputeSHA256Hash(model.Password);
-                    if (passwordTocheck == user.Password)
+                    if (BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
                     {
                         var claims = new List<Claim>()
                         {

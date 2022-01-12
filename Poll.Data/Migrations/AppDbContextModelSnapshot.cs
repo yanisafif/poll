@@ -46,6 +46,9 @@ namespace Poll.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DeactivateDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Description")
                         .HasMaxLength(220)
                         .HasColumnType("varchar(220)");
@@ -61,9 +64,6 @@ namespace Poll.Data.Migrations
 
                     b.Property<string>("GuidVote")
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("tinyint(1)");
