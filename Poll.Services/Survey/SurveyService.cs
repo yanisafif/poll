@@ -5,6 +5,8 @@ using System.Net.Mail;
 using System.Text;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Globalization;
 using Poll.Services.ViewModel;
 using Poll.Data.Repositories;
 using Poll.Data.Model;
@@ -35,6 +37,8 @@ namespace Poll.Services
             this._userService = usersService;
             this._logger = logger;
             this._configuration = configuration;
+
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
         }
 
         public async Task<IEnumerable<SurveyViewModel>> GetListAsync()
