@@ -21,7 +21,6 @@ namespace Poll.Services
         private readonly IVoteRepository _voteRepo;
         private readonly IUsersService _userService;
         private readonly IConfiguration _configuration;
-
         private readonly ILogger<SurveyService> _logger;
 
         public SurveyService(
