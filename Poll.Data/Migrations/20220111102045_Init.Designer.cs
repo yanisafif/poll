@@ -9,8 +9,8 @@ using Poll.Data;
 namespace Poll.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220106152807_init")]
-    partial class init
+    [Migration("20220111102045_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,6 +48,9 @@ namespace Poll.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DeactivateDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Description")
                         .HasMaxLength(220)
                         .HasColumnType("varchar(220)");
@@ -63,9 +66,6 @@ namespace Poll.Data.Migrations
 
                     b.Property<string>("GuidVote")
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("tinyint(1)");

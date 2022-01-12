@@ -13,6 +13,7 @@ namespace Poll.Services.ViewModel
         public int NumberOfVoter { get; set; }
         public string Description { get; set; }
         public bool IsMultipleChoice { get; set; }
+        public string DeactivateDate { get; set;}
         public List<ChoiceViewModel> Choices { get; set; }
         public string Guid { get; set; }
     }

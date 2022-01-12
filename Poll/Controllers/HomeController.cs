@@ -63,7 +63,7 @@ namespace Poll.Controllers
             {
                 return View();
             }else{
-                return Redirect("index");
+                return Redirect("/");
             }
             
         }
@@ -74,7 +74,7 @@ namespace Poll.Controllers
             
             if (await _usersService.AuthenticatedAsync(model))
             {
-                return Redirect("index");
+                return Redirect("/");
             }else
             {
                 ModelState.AddModelError("model", "L'email ou le mot de passe ne correspondent pas");

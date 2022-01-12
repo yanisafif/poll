@@ -25,5 +25,11 @@ namespace Poll.Services
         Task<LinkViewModel> GetLinkViewModelAsync(string linkGuid);
 
         Task SendEmailInvitationAsync(LinkViewModel model);
+
+        bool IsSurveyActive(Survey survey);
+
+        string GetDeactivateDate(Survey survey);
+
+        Task DeleteAsync(string deactivateGuid);
     }
 }

@@ -16,7 +16,7 @@
     <div class="row my-2 font-weight-bold text-center">
         <span class="col">Nom</span>
         <span class="col">Créateur</span>
-        <span class="col">Statut</span>
+        <span class="col">Statut <br> Date désactivation</span>
         <span class="col">Date de création</span>
         <span class="col">Actions</span>
     </div>
@@ -34,14 +34,25 @@
                 }
                 <span class="col pl-0 font-weight-bold">@survey.PollName</span>
                 <span class="col">@survey.Username</span>
-                @if(survey.IsActive)
-                {
-                    <span class="col">Ouvert</span>
-                }
-                else 
-                {
-                    <span class="col">Fermé</span>
-                }
+                <div class="col">
+                    @if(survey.IsActive)
+                    {
+                        <span>Ouvert</span>
+                    }
+                    else 
+                    {
+                        <span>Fermé</span>
+                    }
+                    <br>
+                    @if(String.IsNullOrEmpty(survey.DeactivateDate))
+                    {
+                        <span>Pas de date d'expiration</span>
+                    }
+                    else 
+                    {
+                        <span>@survey.DeactivateDate</span>
+                    }
+                </div>
                 <span class="col">@survey.CreationDate</span>
                 <div class="col">
                     @if (User.Identity.IsAuthenticated)
@@ -67,6 +78,10 @@
                         else
                         {
                             <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
+                        }
+                        @if(survey.IsCurrentUser)
+                        {
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Delete/@survey.GuidDeactivate">Supprimer le sondage</a> </div>
                         }
                     }
                     else

@@ -5,8 +5,16 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-<h4>@Model.PollName</h4>
+<h3>@Model.PollName</h3>
 <h5>Nombre de votant : @Model.NumberOfVoter</h5>
+@if(String.IsNullOrEmpty(Model.DeactivateDate))
+{
+    <h5>Pas de date d'expiration</h5>
+}
+else 
+{
+    <h5>Date d'expiration : @Model.DeactivateDate</h5>
+}
 <hr />
 @if(!String.IsNullOrWhiteSpace(Model.Description))
 {

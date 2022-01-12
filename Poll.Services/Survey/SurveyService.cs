@@ -54,9 +54,10 @@ namespace Poll.Services
                     PollName = a.Name, 
                     Username = a.User.Pseudo, 
                     CreationDate = a.CreationDate.ToShortDateString(), 
-                    IsActive =  a.IsActive, 
                     Description = a.Description ?? "", 
+                    IsActive = this.IsSurveyActive(a), 
                     GuidDeactivate = a.GuidDeactivate,
+                    DeactivateDate = this.GetDeactivateDate(a),
                     GuidResult = a.GuidResult,
                     GuidVote = a.GuidVote,
                     IsCurrentUser = a.User.Id == userId, 
@@ -88,15 +89,17 @@ namespace Poll.Services
             if(choices.Count < 2)
                 throw new NotEnoughChoicesException();
 
+            this._logger.LogInformation("DeactivateDate: " + (surveyModel.DeactivateDate is null));
+
             Survey survey = new Survey()
             {
                 CreationDate = DateTime.Now,
                 Description = surveyModel.Description,
                 Choices = choices,
                 Name = surveyModel.Name,
-                IsActive = true,
                 IsPrivate = surveyModel.IsPrivate,
                 MultipleChoices = surveyModel.IsMultipleChoices, 
+                DeactivateDate = surveyModel.DeactivateDate,
                 GuidDeactivate = Guid.NewGuid().ToString(),
                 GuidLink = Guid.NewGuid().ToString(),
                 GuidResult = Guid.NewGuid().ToString(),
@@ -125,9 +128,22 @@ namespace Poll.Services
             if(survey.User.Id != user.Id)
                 throw new UserNotCorrespondingException();
 
-            survey.IsActive = false; 
+            survey.DeactivateDate = DateTime.Now; 
 
             await this._surveyRepo.UpdateAsync(survey);
+        }
+
+        public async Task DeleteAsync(string deactivateGuid)
+        {
+            if(String.IsNullOrWhiteSpace(deactivateGuid))
+                throw new ArgumentNullException(nameof(deactivateGuid));
+
+            Survey survey = await this._surveyRepo.GetAsync(deactivateGuid, GuidType.Deactivate); 
+
+            if(survey is null)
+                throw new ArgumentException(nameof(deactivateGuid));
+
+            await this._surveyRepo.DeleteAsync(survey);
         }
 
         public async Task<List<ResultViewModel>> GetResultAsync(int idSurvey)
@@ -204,29 +220,59 @@ namespace Poll.Services
             sbBody.Append("<p>Bonjour,</p>");
             sbBody.Append($"<p>Vous avez été invité(e) à voter au sondage <strong>{survey.Name}</strong> par <strong>{survey.User.Pseudo}</strong>.</p>");
             sbBody.Append($"<p><a href=\"{link}/Survey/Vote/{survey.GuidVote}\">Cliquez ici pour voter</a>, ");
-            sbBody.Append($"Ou <a href=\"{link}/Survey/Result/{survey.GuidResult}\">ici pour voir les résultats</a></p>");
-            sbBody.Append($"<p>Ce message vous à été envoyé(e) par <a href=\"{link}\">{link}</a></p>");
+            sbBody.Append($"ou <a href=\"{link}/Survey/Result/{survey.GuidResult}\">ici pour voir les résultats</a></p>");
+            sbBody.Append($"<p>Ce message vous a été envoyé(e) par <a href=\"{link}\">{link}</a></p>");
 
             IConfigurationSection emailSettings = this._configuration.GetSection("EmailSettings"); 
-            
-            SmtpClient smtpClient = new SmtpClient(emailSettings["Host"])
-            {
-                Port = Convert.ToInt32(emailSettings["Port"]),
-                Credentials = new NetworkCredential(emailSettings["Email"], emailSettings["Password"]),
-                EnableSsl = true,
-            };
+            string emailFrom = emailSettings["Email"];
 
-            MailMessage msg = new MailMessage()
+            using(
+                SmtpClient smtpClient = new SmtpClient(emailSettings["Host"])
+                {
+                    Port = Convert.ToInt32(emailSettings["Port"]),
+                    Credentials = new NetworkCredential(emailFrom, emailSettings["Password"]),
+                    EnableSsl = true
+                }
+            ) 
             {
-                IsBodyHtml = true, 
-                Body = sbBody.ToString(), 
-                From = new MailAddress(emailSettings["Email"]), 
-                Subject = $"Invitation au sondage {survey.Name}", 
-            };
-            msg.Bcc.Add(String.Join(',', model.Emails));
-            await smtpClient.SendMailAsync(msg);
+                MailMessage msg = new MailMessage()
+                {
+                    IsBodyHtml = true, 
+                    Body = sbBody.ToString(), 
+                    From = new MailAddress(emailFrom), 
+                    Subject = $"Invitation au sondage {survey.Name}", 
+                };
+                foreach (string item in model.Emails)
+                {
+                    if(String.IsNullOrWhiteSpace(item))
+                        continue;
+                    try 
+                    {
+                        msg.Bcc.Add(new MailAddress(item));
+                    }
+                    catch { }
+                }
+                if(msg.Bcc.Count > 0)
+                    await smtpClient.SendMailAsync(msg);
+            }
         }
+        public bool IsSurveyActive(Survey survey)
+        {
+            if(survey.DeactivateDate is null || !survey.DeactivateDate.HasValue)
+                return true;
+
+            return survey.DeactivateDate.Value.Subtract(DateTime.Now).TotalMilliseconds > 0;
+        }
+
+        public string GetDeactivateDate(Survey survey)
+        {
+            if(survey.DeactivateDate is null || !survey.DeactivateDate.HasValue)
+                return ""; 
+            return survey.DeactivateDate.Value.ToShortDateString();
+        }
+
     }
+
 
     [System.Serializable]
     public class UserNotCorrespondingException : System.Exception
