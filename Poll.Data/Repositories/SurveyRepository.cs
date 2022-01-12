@@ -85,6 +85,24 @@ namespace Poll.Data.Repositories
             this._dbContext.Surveys.Update(survey);
             await this._dbContext.SaveChangesAsync();
         }
+
+        public async Task DeleteAsync(Survey survey)
+        {
+            if(survey is null)
+                throw new ArgumentNullException(nameof(survey));
+
+            List<Vote> votes = new List<Vote>(); 
+
+            foreach(Choice choice in survey.Choices)
+            {
+                votes.AddRange(await this._dbContext.Votes.Where(f => f.Choice.Id == choice.Id).ToListAsync());
+            }
+            if(votes.Count > 0)
+                this._dbContext.Votes.RemoveRange(votes);
+            this._dbContext.Choices.RemoveRange(survey.Choices);
+            this._dbContext.Surveys.Remove(survey);
+            await this._dbContext.SaveChangesAsync();
+        }
         
         public bool DidUserVoteSurvey(int surveyId, int userId)
         {

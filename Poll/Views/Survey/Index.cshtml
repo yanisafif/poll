@@ -79,6 +79,10 @@
                         {
                             <div class="pointer py-1"> <a class="link" href="/Survey/Result/@survey.GuidResult">Voir les résultats</a> </div>
                         }
+                        @if(survey.IsCurrentUser)
+                        {
+                            <div class="pointer py-1"> <a class="link" href="/Survey/Delete/@survey.GuidDeactivate">Supprimer le sondage</a> </div>
+                        }
                     }
                     else
                     {

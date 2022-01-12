@@ -133,6 +133,19 @@ namespace Poll.Services
             await this._surveyRepo.UpdateAsync(survey);
         }
 
+        public async Task DeleteAsync(string deactivateGuid)
+        {
+            if(String.IsNullOrWhiteSpace(deactivateGuid))
+                throw new ArgumentNullException(nameof(deactivateGuid));
+
+            Survey survey = await this._surveyRepo.GetAsync(deactivateGuid, GuidType.Deactivate); 
+
+            if(survey is null)
+                throw new ArgumentException(nameof(deactivateGuid));
+
+            await this._surveyRepo.DeleteAsync(survey);
+        }
+
         public async Task<List<ResultViewModel>> GetResultAsync(int idSurvey)
         {
             var choices = await _surveyRepo.GetChoicesAsync(idSurvey);
