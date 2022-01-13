@@ -16,15 +16,19 @@ Pour faire fonctionner ce projet en local :
 
 - Changer la "ConnectionStrings" & MysqlVersion :
 
-``"ConnectionStrings": {
-  "MariaDbConnectionString": "server=localhost;database=Poll;user=root;
+```json
+"ConnectionStrings": {
+  "MariaDbConnectionString": "server=localhost;database=Poll;user=root"
 },
-"MysqlVersion": "VOTRE VERSION DE MY SQL (5.5.5)"``
+"MysqlVersion": "x.x.x"
+```
     
-- Appliquer la migration :
-  ``cd Poll``
-  ``dotnet ef database create``
-  ``dotnet ef database update``
+- Appliquer la migration en shell :
+```sh
+  cd Poll
+  
+  dotnet ef database update
+```
   
 
 
